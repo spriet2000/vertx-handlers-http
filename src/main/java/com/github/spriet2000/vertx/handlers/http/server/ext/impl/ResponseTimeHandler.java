@@ -1,24 +1,24 @@
 package com.github.spriet2000.vertx.handlers.http.server.ext.impl;
 
-import com.github.spriet2000.vertx.handlers.http.server.ServerController;
-import com.github.spriet2000.vertx.handlers.http.server.ServerHandler;
+import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
+import com.github.spriet2000.vertx.handlers.http.server.RequestHandler;
 import io.vertx.core.Handler;
 
-public class ResponseTimeHandler implements ServerController {
+public class ResponseTimeHandler implements RequestHandler<RequestContext> {
 
     public static ResponseTimeHandler responseTime() {
         return new ResponseTimeHandler();
     }
 
     @Override
-    public ServerHandler<Object> handle(Handler fail, Handler next) {
-        return (req, res, args) -> {
+    public Handler<RequestContext> apply(Handler<Throwable> fail, Handler<Object> next) {
+        return context -> {
             long start = System.nanoTime();
-            res.headersEndHandler(event ->
-                    res.headers().add("X-Response-Time",
+            context.request().response().headersEndHandler(event ->
+                    context.request().response().headers().add("X-Response-Time",
                             String.format("%sms",
                                     (System.nanoTime() - start) / (double) 1000000)));
-            next.handle(args);
+            next.handle(context);
         };
     }
 }

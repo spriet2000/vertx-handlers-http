@@ -1,6 +1,9 @@
-package com.github.spriet2000.vertx.handlers.http.server;
+package com.github.spriet2000.vertx.handlers.http.tests;
 
-import com.github.spriet2000.vertx.handlers.http.server.ext.impl.EndResponseHandler;
+
+import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
+import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
+import io.vertx.core.Handler;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.logging.Logger;
@@ -11,11 +14,10 @@ import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 
-import static com.github.spriet2000.vertx.handlers.http.server.ServerHandlers.handlers;
+public class BombTests extends HttpTestBase {
 
-public class BombTest extends HttpTestBase {
+    Logger logger = LoggerFactory.getLogger(BombTests.class);
 
-    Logger logger = LoggerFactory.getLogger(BombTest.class);
 
     @Before
     public void setup() {
@@ -24,18 +26,23 @@ public class BombTest extends HttpTestBase {
     }
 
     @Test
-    public void bomb() {
-        ServerHandlers handlers = handlers(
-                (fail, next) -> (req, res, args) -> next.handle(0),
-                (fail, next) -> (req, res, args) -> {
-                    assertEquals(0, args);
-                    next.handle(1);
-                },
-                (fail, next) -> (req, res, args) -> {
-                    assertEquals(1, args);
-                    next.handle(0);
-                },
-                new EndResponseHandler());
+    public void bomb(){
+
+        Handler<Throwable> exception = e -> {};
+        Handler<Object> success = e -> {};
+
+        RequestHandlers<RequestContext> handlers = new RequestHandlers<>(exception, success);
+
+        handlers.then((f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> ctx -> ctx.request().response().end());
 
         int bombs = 2000;
         CountDownLatch startSignal = new CountDownLatch(bombs);
@@ -57,5 +64,7 @@ public class BombTest extends HttpTestBase {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+
     }
 }

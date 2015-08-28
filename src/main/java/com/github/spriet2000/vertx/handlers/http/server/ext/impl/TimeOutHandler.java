@@ -1,12 +1,11 @@
 package com.github.spriet2000.vertx.handlers.http.server.ext.impl;
 
-import com.github.spriet2000.vertx.handlers.http.server.ServerController;
-import com.github.spriet2000.vertx.handlers.http.server.ServerHandler;
-import io.netty.handler.codec.http.HttpResponseStatus;
+import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
+import com.github.spriet2000.vertx.handlers.http.server.RequestHandler;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 
-public class TimeOutHandler implements ServerController {
+public class TimeOutHandler implements RequestHandler<RequestContext> {
 
     private final Vertx vertx;
     private final long time;
@@ -22,15 +21,11 @@ public class TimeOutHandler implements ServerController {
     }
 
     @Override
-    public ServerHandler<Object> handle(Handler fail, Handler next) {
-        return (req, res, args) -> {
-            long id = vertx.setTimer(time, c -> {
-                fail.handle(HttpResponseStatus.REQUEST_TIMEOUT.code());
-            });
-            res.bodyEndHandler(e -> {
-                vertx.cancelTimer(id);
-            });
-            next.handle(args);
+    public Handler<RequestContext> apply(Handler<Throwable> fail, Handler<Object> next) {
+        return context -> {
+            long id = vertx.setTimer(time, c -> fail.handle(new RuntimeException()));
+            context.request().response().bodyEndHandler(e -> vertx.cancelTimer(id));
+            next.handle(context);
         };
     }
 }

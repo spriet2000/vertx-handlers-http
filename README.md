@@ -8,62 +8,19 @@ Handlers-http provides a minimal and adaptable interface for developing web appl
 
 ```java 
 
-ServerHandlers commonHandlers = handlers(error(), responseTime());
+        Handler<Throwable> exception = e -> {};
+        Handler<Object> success = e -> {};
 
-ServerHandlers errorHandler = handlers(commonHandlers)
-        .then(errorResponse());
+        RequestHandlers<RequestContext> handlers = new RequestHandlers<>(exception, success);
 
-ServerHandlers fooHandlers = handlers(commonHandlers)
-        .then(new Foo1Handler(), new Foo2Handler()).with(FooContext::new)
-        .exceptionHandler(errorHandler)
-        .completeHandler((req, res, args) -> {
-            log.info("Handled request..");
-        });
+        handlers.then((f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> n::handle,
+                (f, n) -> ctx -> ctx.request().response().end());
 
-server.requestHandler(fooHandlers).listen(
-        onSuccess(s -> client.request(
-                HttpMethod.GET, 8080, "localhost", "/test", resp -> {
-                    assertEquals(200, resp.statusCode());
-                    assertEquals("1", resp.headers().get("result1"));
-                    assertEquals("2", resp.headers().get("result2"));
-                    log.info(resp.headers().get("X-Response-Time"));
-                    testComplete();
-                }).end()));
-
-```
-
-### Test handlers
-
-```java
-
-class Foo1Handler implements ServerController {
-
-    @Override
-    public ServerHandler<Foo> handle(Handler fail, Handler next) {
-        return (req, res, args) -> {
-            args.setResult1("1");
-            args.setResult2("2");
-            next.handle(args);
-        };
-    }
-}
-
-```
-
-```java
-
-class Foo2Handler implements ServerController {
-
-    @Override
-    public ServerHandler<Foo> handle(Handler fail, Handler next) {
-        return (req, res, args) -> {
-            res.headers().add("result1", args.getResult1());
-            res.headers().add("result2", args.getResult2());
-            res.end();
-            next.handle(args);
-        };
-    }
-}
+        server.requestHandler(handlers).listen();
 
 ```
 
