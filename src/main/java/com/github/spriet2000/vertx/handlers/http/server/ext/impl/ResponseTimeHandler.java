@@ -1,10 +1,9 @@
 package com.github.spriet2000.vertx.handlers.http.server.ext.impl;
 
 import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
-import com.github.spriet2000.vertx.handlers.http.server.RequestHandler;
 import io.vertx.core.Handler;
 
-public class ResponseTimeHandler implements RequestHandler<RequestContext> {
+public class ResponseTimeHandler implements java.util.function.BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>> {
 
     public static ResponseTimeHandler responseTime() {
         return new ResponseTimeHandler();

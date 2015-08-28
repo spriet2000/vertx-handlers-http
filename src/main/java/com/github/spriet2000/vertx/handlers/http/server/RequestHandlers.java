@@ -35,8 +35,8 @@ public final class RequestHandlers<E> implements Handler<HttpServerRequest>, Han
         }
     }
 
-    public RequestHandlers handlers(RequestHandler... handlers) {
-        for (RequestHandler handler : handlers) {
+    public RequestHandlers handlers(BiFunction<Handler<Throwable>, Handler<Object>, Handler<E>>... handlers) {
+        for (BiFunction<Handler<Throwable>, Handler<Object>, Handler<E>> handler : handlers) {
             requestHandlers.handlers().add(handler);
         }
         return this;

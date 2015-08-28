@@ -1,11 +1,10 @@
 package com.github.spriet2000.vertx.handlers.http.server.ext.impl;
 
 import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
-import com.github.spriet2000.vertx.handlers.http.server.RequestHandler;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 
-public class TimeOutHandler implements RequestHandler<RequestContext> {
+public class TimeOutHandler implements java.util.function.BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>> {
 
     private final Vertx vertx;
     private final long time;

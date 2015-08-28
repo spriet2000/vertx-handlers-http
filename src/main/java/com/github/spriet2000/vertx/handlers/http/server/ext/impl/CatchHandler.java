@@ -1,10 +1,9 @@
 package com.github.spriet2000.vertx.handlers.http.server.ext.impl;
 
 import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
-import com.github.spriet2000.vertx.handlers.http.server.RequestHandler;
 import io.vertx.core.Handler;
 
-public class CatchHandler implements RequestHandler<RequestContext> {
+public class CatchHandler implements java.util.function.BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>> {
 
     public static CatchHandler error() {
         return new CatchHandler();
