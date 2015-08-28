@@ -5,10 +5,6 @@ import io.vertx.core.Handler;
 
 public class CatchHandler implements java.util.function.BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>> {
 
-    public static CatchHandler error() {
-        return new CatchHandler();
-    }
-
     @Override
     public Handler<RequestContext> apply(Handler<Throwable> fail, Handler<Object> next) {
         return context -> {
