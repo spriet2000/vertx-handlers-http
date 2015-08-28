@@ -7,7 +7,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.impl.LoggerFactory;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.test.core.HttpTestBase;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,6 @@ import java.util.concurrent.CountDownLatch;
 public class BombTests extends HttpTestBase {
 
     Logger logger = LoggerFactory.getLogger(BombTests.class);
-
 
     @Before
     public void setup() {
