@@ -5,18 +5,12 @@ import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.test.core.HttpTestBase;
 import org.junit.Before;
 import org.junit.Test;
 
 
-
 public class Example  extends HttpTestBase {
-
-    Logger logger = LoggerFactory.getLogger(Example.class);
-
 
     @Before
     public void setup() {
@@ -40,6 +34,7 @@ public class Example  extends HttpTestBase {
                 (f, n) -> n::handle,
                 (f, n) -> ctx -> ctx.request().response().end());
 
-        server.requestHandler(handlers).listen();
+        server.requestHandler(e -> handlers.handle(e,
+                c -> new RequestContext(e))).listen();
     }
 }
