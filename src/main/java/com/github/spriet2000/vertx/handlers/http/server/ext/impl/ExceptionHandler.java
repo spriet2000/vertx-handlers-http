@@ -1,6 +1,5 @@
 package com.github.spriet2000.vertx.handlers.http.server.ext.impl;
 
-import com.github.spriet2000.vertx.handlers.http.server.Request;
 import io.vertx.core.Handler;
 
 import java.util.function.BiFunction;

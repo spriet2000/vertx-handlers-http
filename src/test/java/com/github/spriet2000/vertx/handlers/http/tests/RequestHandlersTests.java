@@ -1,6 +1,7 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
-import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
+import com.github.spriet2000.vertx.handlers.http.server.ext.impl.Request;
+import com.github.spriet2000.vertx.handlers.http.server.ext.impl.RequestContext;
 import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpClientOptions;
@@ -25,14 +26,14 @@ public class RequestHandlersTests extends HttpTestBase {
         Handler<Throwable> exception = e -> hitException.set(true);
         Handler<Object> success = s -> hitComplete.set(true);
 
-        RequestHandlers handlers = new RequestHandlers(exception, success);
+        RequestHandlers<Void> handlers = new RequestHandlers<>(exception, success);
 
         handlers.then((f, n) -> n::handle,
                 (f, n) -> n::handle,
                 (f, n) -> n::handle,
                 (f, n) -> n::handle);
 
-        handlers.handle(null, RequestContext::new);
+        handlers.handle(null, null);
 
         assertEquals(false, hitException.get());
         assertEquals(true, hitComplete.get());
@@ -47,14 +48,14 @@ public class RequestHandlersTests extends HttpTestBase {
         Handler<Throwable> exception = e -> hitException.set(true);
         Handler<Object> success = s -> hitComplete.set(true);
 
-        RequestHandlers handlers = new RequestHandlers(exception, success);
+        RequestHandlers<Void> handlers = new RequestHandlers<>(exception, success);
 
         handlers.then((f, n) -> n::handle,
                 (f, n) -> n::handle,
                 (f, n) -> c -> f.handle(new RuntimeException()),
                 (f, n) -> n::handle);
 
-        handlers.handle(null, RequestContext::new);
+        handlers.handle(null, null);
 
         assertEquals(true, hitException.get());
         assertEquals(false, hitComplete.get());
@@ -66,7 +67,7 @@ public class RequestHandlersTests extends HttpTestBase {
         Handler<Throwable> exception = logger::error;
         Handler<Object> success = logger::info;
 
-        RequestHandlers handlers = new RequestHandlers(exception, success);
+        RequestHandlers<Request> handlers = new RequestHandlers<>(exception, success);
         handlers.then((f, n) -> n::handle,
                 (f, n) -> ctx -> ctx.request().response().end());
 
@@ -85,13 +86,13 @@ public class RequestHandlersTests extends HttpTestBase {
         Handler<Throwable> exception = logger::error;
         Handler<Object> success = logger::info;
 
-        RequestHandlers handlers1 = new RequestHandlers(exception, success);
+        RequestHandlers<Request> handlers1 = new RequestHandlers<>(exception, success);
         handlers1.then((f, n) -> n::handle);
 
-        RequestHandlers handlers2 = new RequestHandlers(handlers1);
+        RequestHandlers<Request> handlers2 = new RequestHandlers<>(handlers1);
         handlers2.then((f, n) -> n::handle);
 
-        RequestHandlers handlers3 = new RequestHandlers(handlers2);
+        RequestHandlers<Request> handlers3 = new RequestHandlers<>(handlers2);
         handlers3.then((f, n) -> ctx -> ctx.request().response().end());
 
         vertx.createHttpServer(new HttpServerOptions().setPort(8080))
