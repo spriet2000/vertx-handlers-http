@@ -2,7 +2,8 @@ package com.github.spriet2000.vertx.handlers.http.tests;
 
 import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
 import io.vertx.core.Handler;
-import io.vertx.core.http.*;
+import io.vertx.core.http.HttpClientOptions;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.test.core.HttpTestBase;
@@ -23,7 +24,7 @@ public class RequestHandlersTests extends HttpTestBase {
         Handler<Throwable> exception = e -> hitException.set(true);
         Handler<Object> success = s -> hitComplete.set(true);
 
-        RequestHandlers<Void> handlers = new RequestHandlers<>(exception, success);
+        RequestHandlers handlers = new RequestHandlers(exception, success);
 
         handlers.then((f, n) -> n::handle,
                 (f, n) -> n::handle,
@@ -45,7 +46,7 @@ public class RequestHandlersTests extends HttpTestBase {
         Handler<Throwable> exception = e -> hitException.set(true);
         Handler<Object> success = s -> hitComplete.set(true);
 
-        RequestHandlers<Void> handlers = new RequestHandlers<>(exception, success);
+        RequestHandlers handlers = new RequestHandlers(exception, success);
 
         handlers.then((f, n) -> n::handle,
                 (f, n) -> n::handle,
@@ -59,35 +60,38 @@ public class RequestHandlersTests extends HttpTestBase {
     }
 
     @Test
-    public void testHttpServerRequest(){
-
-        Handler<Throwable> exception = logger::error;
-        Handler<Object> success = logger::info;
-
-        RequestHandlers<HttpServerRequest> handlers = new RequestHandlers<>(exception, success);
-        handlers.then((f, n) -> n::handle,
-                (f, n) -> req -> req.response().end());
-
-        vertx.createHttpServer(new HttpServerOptions().setPort(8080))
-                .requestHandler(handlers).listen(onSuccess(s ->
-                    vertx.createHttpClient(new HttpClientOptions())
-                        .getNow(8080, "localhost", "/test", res -> testComplete())));
-
-        await();
-    }
-
-    @Test
     public void testHttpContext(){
 
         Handler<Throwable> exception = logger::error;
         Handler<Object> success = logger::info;
 
-        RequestHandlers<HttpContext> handlers = new RequestHandlers<>(exception, success);
+        RequestHandlers handlers = new RequestHandlers(exception, success);
         handlers.then((f, n) -> n::handle,
                 (f, n) -> ctx -> ctx.request().response().end());
 
         vertx.createHttpServer(new HttpServerOptions().setPort(8080))
-                .requestHandler(e -> handlers.handle(e, req -> new HttpContext(e)))
+                .requestHandler(e -> handlers.handle(e, req -> new CustomContext1(e)))
+                .listen(onSuccess(s ->
+                        vertx.createHttpClient(new HttpClientOptions())
+                                .getNow(8080, "localhost", "/test", res -> testComplete())));
+
+        await();
+    }
+
+    @Test
+    public void testMerge(){
+
+        Handler<Throwable> exception = logger::error;
+        Handler<Object> success = logger::info;
+
+        RequestHandlers handlers1 = new RequestHandlers(exception, success);
+        handlers1.then((f, n) -> n::handle);
+
+        RequestHandlers handlers2 = new RequestHandlers(handlers1);
+        handlers2.then((f, n) -> n::handle);
+
+        vertx.createHttpServer(new HttpServerOptions().setPort(8080))
+                .requestHandler(e -> handlers1.handle(e, req -> new CustomContext1(e)))
                 .listen(onSuccess(s ->
                         vertx.createHttpClient(new HttpClientOptions())
                                 .getNow(8080, "localhost", "/test", res -> testComplete())));

@@ -9,7 +9,6 @@ import com.github.spriet2000.vertx.handlers.http.server.ext.impl.TimeOutHandler;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.test.core.HttpTestBase;
@@ -34,7 +33,7 @@ public class BombTests extends HttpTestBase {
         Handler<Throwable> exception = logger::error;
         Handler<Object> success = logger::info;
 
-        RequestHandlers<HttpServerRequest> handlers = new RequestHandlers<>(exception, success);
+        RequestHandlers handlers = new RequestHandlers(exception, success);
 
         handlers.then(new ExceptionHandler(),
                 new ResponseTimeHandler(),
@@ -43,26 +42,23 @@ public class BombTests extends HttpTestBase {
 
         int bombs = 2000;
         CountDownLatch startSignal = new CountDownLatch(bombs);
-        server.requestHandler(handlers)
-                .listen(onSuccess(s -> {
-                    client = vertx.createHttpClient(new HttpClientOptions());
-                    for (int i = 0; i < bombs; i++) {
-                        client.getNow(8080, "localhost", "/test",
-                                res -> {
-                                    logger.info(startSignal.getCount());
-                                    logger.info(res.headers().get("X-Response-Time"));
-                                    assertEquals(200, res.statusCode());
-                                    startSignal.countDown();
-                                });
-                    }
-                }));
+        server.requestHandler(req -> handlers.handle(req, CustomContext1::new)).listen(onSuccess(s -> {
+            client = vertx.createHttpClient(new HttpClientOptions());
+            for (int i = 0; i < bombs; i++) {
+                client.getNow(8080, "localhost", "/test",
+                        res -> {
+                            logger.info(startSignal.getCount());
+                            logger.info(res.headers().get("X-Response-Time"));
+                            assertEquals(200, res.statusCode());
+                            startSignal.countDown();
+                        });
+            }
+        }));
 
         try {
             startSignal.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
     }
 }

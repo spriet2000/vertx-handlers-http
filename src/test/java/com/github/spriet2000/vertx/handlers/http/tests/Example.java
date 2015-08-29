@@ -1,14 +1,13 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
 import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
-import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ExceptionHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.EndHandler;
+import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ExceptionHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ResponseTimeHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.TimeOutHandler;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.test.core.HttpTestBase;
@@ -32,8 +31,7 @@ public class Example  extends HttpTestBase {
         Handler<Throwable> exception = logger::error;
         Handler<Object> success = logger::info;
 
-        RequestHandlers<HttpServerRequest> handlers =
-                new RequestHandlers<>(exception, success);
+        RequestHandlers handlers = new RequestHandlers(exception, success);
 
         handlers.then(new ExceptionHandler(),
                 new ResponseTimeHandler(),
@@ -50,12 +48,12 @@ public class Example  extends HttpTestBase {
         Handler<Throwable> exception = logger::error;
         Handler<Object> success = logger::info;
 
-        RequestHandlers<HttpContext> handlers =
-                new RequestHandlers<>(exception, success);
+        RequestHandlers handlers =
+                new RequestHandlers(exception, success);
 
         handlers.then((f, n) -> e -> e.request().response().end());
 
-        server.requestHandler(e -> handlers.handle(e, HttpContext::new))
+        server.requestHandler(e -> handlers.handle(e, CustomContext1::new))
                 .listen();
     }
 }

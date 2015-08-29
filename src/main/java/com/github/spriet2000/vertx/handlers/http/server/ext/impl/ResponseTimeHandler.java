@@ -1,24 +1,24 @@
 package com.github.spriet2000.vertx.handlers.http.server.ext.impl;
 
+import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
 import io.vertx.core.Handler;
-import io.vertx.core.http.HttpServerRequest;
 
 import java.util.function.BiFunction;
 
-public class ResponseTimeHandler implements BiFunction<Handler<Throwable>, Handler<Object>, Handler<HttpServerRequest>> {
+public class ResponseTimeHandler implements BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>> {
 
     @Override
-    public Handler<HttpServerRequest> apply(Handler<Throwable> fail, Handler<Object> next) {
-        return request -> {
+    public Handler<RequestContext> apply(Handler<Throwable> fail, Handler<Object> next) {
+        return context -> {
             long start = System.nanoTime();
-            request.response().headersEndHandler(e -> {
-                    if (!request.response().headWritten()) {
-                        request.response().headers().add("X-Response-Time",
+            context.request().response().headersEndHandler(e -> {
+                    if (!context.request().response().headWritten()) {
+                        context.request().response().headers().add("X-Response-Time",
                                 String.format("%sms", (System.nanoTime() - start) / (double) 1000000));
                         e.complete();
                     }
                 });
-            next.handle(request);
+            next.handle(context);
         };
     }
 }
