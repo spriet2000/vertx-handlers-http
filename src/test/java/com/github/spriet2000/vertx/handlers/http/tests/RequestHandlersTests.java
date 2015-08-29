@@ -1,5 +1,6 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
+import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
 import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpClientOptions;
@@ -31,7 +32,7 @@ public class RequestHandlersTests extends HttpTestBase {
                 (f, n) -> n::handle,
                 (f, n) -> n::handle);
 
-        handlers.handle(null);
+        handlers.handle(null, RequestContext::new);
 
         assertEquals(false, hitException.get());
         assertEquals(true, hitComplete.get());
@@ -53,7 +54,7 @@ public class RequestHandlersTests extends HttpTestBase {
                 (f, n) -> c -> f.handle(new RuntimeException()),
                 (f, n) -> n::handle);
 
-        handlers.handle(null);
+        handlers.handle(null, RequestContext::new);
 
         assertEquals(true, hitException.get());
         assertEquals(false, hitComplete.get());
@@ -70,7 +71,7 @@ public class RequestHandlersTests extends HttpTestBase {
                 (f, n) -> ctx -> ctx.request().response().end());
 
         vertx.createHttpServer(new HttpServerOptions().setPort(8080))
-                .requestHandler(e -> handlers.handle(e, req -> new CustomContext1(e)))
+                .requestHandler(e -> handlers.handle(e, req -> new RequestContext(e)))
                 .listen(onSuccess(s ->
                         vertx.createHttpClient(new HttpClientOptions())
                                 .getNow(8080, "localhost", "/test", res -> testComplete())));
@@ -90,8 +91,11 @@ public class RequestHandlersTests extends HttpTestBase {
         RequestHandlers handlers2 = new RequestHandlers(handlers1);
         handlers2.then((f, n) -> n::handle);
 
+        RequestHandlers handlers3 = new RequestHandlers(handlers2);
+        handlers3.then((f, n) -> ctx -> ctx.request().response().end());
+
         vertx.createHttpServer(new HttpServerOptions().setPort(8080))
-                .requestHandler(e -> handlers1.handle(e, req -> new CustomContext1(e)))
+                .requestHandler(e -> handlers3.handle(e, RequestContext::new))
                 .listen(onSuccess(s ->
                         vertx.createHttpClient(new HttpClientOptions())
                                 .getNow(8080, "localhost", "/test", res -> testComplete())));

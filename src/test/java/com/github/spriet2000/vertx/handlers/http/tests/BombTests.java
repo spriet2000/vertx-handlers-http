@@ -1,6 +1,7 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
 
+import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
 import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.EndHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ExceptionHandler;
@@ -42,7 +43,7 @@ public class BombTests extends HttpTestBase {
 
         int bombs = 2000;
         CountDownLatch startSignal = new CountDownLatch(bombs);
-        server.requestHandler(req -> handlers.handle(req, CustomContext1::new)).listen(onSuccess(s -> {
+        server.requestHandler(req -> handlers.handle(req, RequestContext::new)).listen(onSuccess(s -> {
             client = vertx.createHttpClient(new HttpClientOptions());
             for (int i = 0; i < bombs; i++) {
                 client.getNow(8080, "localhost", "/test",

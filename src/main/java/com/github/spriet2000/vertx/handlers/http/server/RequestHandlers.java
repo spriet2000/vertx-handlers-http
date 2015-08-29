@@ -10,38 +10,34 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 
-public final class RequestHandlers implements Handler<HttpServerRequest>, Handleable<RequestContext> {
+public final class RequestHandlers implements Handleable<Request> {
 
-    private Handlers<RequestContext> requestHandlers;
+    private Handlers<Request> requestHandlers;
 
     public RequestHandlers(Handler<Throwable> exceptionHandler, Handler<Object> successHandler) {
         requestHandlers = new Handlers<>(exceptionHandler, successHandler);
     }
 
-    public RequestHandlers(Handleable<RequestContext> handleable) {
+    public RequestHandlers(Handleable<Request> handleable) {
         requestHandlers = new Handlers<>(handleable.exceptionHandler(), handleable.successHandler());
-        for (BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>> handler : handleable.handlers()) {
+        for (BiFunction<Handler<Throwable>, Handler<Object>, Handler<Request>> handler : handleable.handlers()) {
             requestHandlers.handlers().add(handler);
         }
     }
 
-    public RequestHandlers handlers(BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>>... handlers) {
-        for (BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>> handler : handlers) {
+    public RequestHandlers handlers(BiFunction<Handler<Throwable>, Handler<Object>, Handler<Request>>... handlers) {
+        for (BiFunction<Handler<Throwable>, Handler<Object>, Handler<Request>> handler : handlers) {
             requestHandlers.handlers().add(handler);
         }
         return this;
     }
 
-    public void handle(HttpServerRequest request, Function<HttpServerRequest, RequestContext> factory) {
+    public void handle(HttpServerRequest request, Function<HttpServerRequest, Request> factory) {
           requestHandlers.handle(factory.apply(request));
     }
 
-    public void handle(HttpServerRequest request) {
-        requestHandlers.handle((RequestContext) request);
-    }
-
     @Override
-    public List<BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>>> handlers() {
+    public List<BiFunction<Handler<Throwable>, Handler<Object>, Handler<Request>>> handlers() {
         return requestHandlers.handlers();
     }
 
@@ -55,15 +51,14 @@ public final class RequestHandlers implements Handler<HttpServerRequest>, Handle
         return requestHandlers.successHandler();
     }
 
-    // ?
-    public RequestHandlers then(BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>> handler){
+    public RequestHandlers then(BiFunction<Handler<Throwable>, Handler<Object>, Handler<Request>> handler){
         requestHandlers.then(handler);
         return this;
     }
 
     @SafeVarargs
-    public final RequestHandlers then(BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>>... handlers){
-        for (BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>> handler : handlers) {
+    public final RequestHandlers then(BiFunction<Handler<Throwable>, Handler<Object>, Handler<Request>>... handlers){
+        for (BiFunction<Handler<Throwable>, Handler<Object>, Handler<Request>> handler : handlers) {
             then(handler);
         }
         return this;

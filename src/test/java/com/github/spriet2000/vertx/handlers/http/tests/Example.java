@@ -1,5 +1,6 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
+import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
 import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.EndHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ExceptionHandler;
@@ -38,22 +39,7 @@ public class Example  extends HttpTestBase {
                 new TimeOutHandler(vertx),
                 new EndHandler());
 
-        server.requestHandler(handlers::handle)
-                .listen();
-    }
-
-    @Test
-    public void example2(){
-
-        Handler<Throwable> exception = logger::error;
-        Handler<Object> success = logger::info;
-
-        RequestHandlers handlers =
-                new RequestHandlers(exception, success);
-
-        handlers.then((f, n) -> e -> e.request().response().end());
-
-        server.requestHandler(e -> handlers.handle(e, CustomContext1::new))
+        server.requestHandler(e -> handlers.handle(e, RequestContext::new))
                 .listen();
     }
 }
