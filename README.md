@@ -14,12 +14,10 @@ Handlers-http provides a minimal and adaptable interface for developing web appl
         RequestHandlers<HttpServerRequest> handlers =
                 new RequestHandlers<>(exception, success);
 
-        handlers.then((f, n) -> n::handle,
-                (f, n) -> n::handle,
-                (f, n) -> n::handle,
-                (f, n) -> n::handle,
-                (f, n) -> n::handle,
-                (f, n) -> request -> request.response().end());
+        handlers.then(new ExceptionHandler(),
+                new TimeOutHandler(vertx),
+                new ResponseTimeHandler(),
+                new EndHandler());
 
         server.requestHandler(handlers::handle)
                 .listen();

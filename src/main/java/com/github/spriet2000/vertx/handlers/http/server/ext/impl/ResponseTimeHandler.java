@@ -7,19 +7,18 @@ import java.util.function.BiFunction;
 
 public class ResponseTimeHandler implements BiFunction<Handler<Throwable>, Handler<Object>, Handler<HttpServerRequest>> {
 
-    public static ResponseTimeHandler responseTime() {
-        return new ResponseTimeHandler();
-    }
-
     @Override
     public Handler<HttpServerRequest> apply(Handler<Throwable> fail, Handler<Object> next) {
-        return context -> {
+        return request -> {
             long start = System.nanoTime();
-            context.response().headersEndHandler(event ->
-                    context.response().headers().add("X-Response-Time",
-                            String.format("%sms",
-                                    (System.nanoTime() - start) / (double) 1000000)));
-            next.handle(context);
+            request.response().headersEndHandler(e -> {
+                    if (!request.response().headWritten()) {
+                        request.response().headers().add("X-Response-Time",
+                                String.format("%sms", (System.nanoTime() - start) / (double) 1000000));
+                        e.complete();
+                    }
+                });
+            next.handle(request);
         };
     }
 }

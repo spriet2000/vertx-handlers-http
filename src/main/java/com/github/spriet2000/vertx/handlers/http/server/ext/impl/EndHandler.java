@@ -5,7 +5,7 @@ import io.vertx.core.http.HttpServerRequest;
 
 import java.util.function.BiFunction;
 
-public class EndResponseHandler implements BiFunction<Handler<Throwable>, Handler<Object>, Handler<HttpServerRequest>> {
+public class EndHandler implements BiFunction<Handler<Throwable>, Handler<Object>, Handler<HttpServerRequest>> {
 
     @Override
     public Handler<HttpServerRequest> apply(Handler<Throwable> fail, Handler<Object> next) {
