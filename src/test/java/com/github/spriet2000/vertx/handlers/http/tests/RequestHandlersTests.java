@@ -2,13 +2,17 @@ package com.github.spriet2000.vertx.handlers.http.tests;
 
 import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
 import io.vertx.core.Handler;
+import io.vertx.core.http.*;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
+import io.vertx.test.core.HttpTestBase;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.Assert.assertEquals;
+public class RequestHandlersTests extends HttpTestBase {
 
-public class RequestHandlersTests {
+    Logger logger = LoggerFactory.getLogger(RequestHandlersTests.class);
 
     @Test
     public void success(){
@@ -55,9 +59,40 @@ public class RequestHandlersTests {
     }
 
     @Test
-    public void test(){
+    public void testHttpServerRequest(){
 
+        Handler<Throwable> exception = logger::error;
+        Handler<Object> success = logger::info;
 
+        RequestHandlers<HttpServerRequest> handlers = new RequestHandlers<>(exception, success);
+        handlers.then((f, n) -> n::handle,
+                (f, n) -> req -> req.response().end());
+
+        vertx.createHttpServer(new HttpServerOptions().setPort(8080))
+                .requestHandler(handlers).listen(onSuccess(s ->
+                    vertx.createHttpClient(new HttpClientOptions())
+                        .getNow(8080, "localhost", "/test", res -> testComplete())));
+
+        await();
+    }
+
+    @Test
+    public void testHttpContext(){
+
+        Handler<Throwable> exception = logger::error;
+        Handler<Object> success = logger::info;
+
+        RequestHandlers<HttpContext> handlers = new RequestHandlers<>(exception, success);
+        handlers.then((f, n) -> n::handle,
+                (f, n) -> ctx -> ctx.request().response().end());
+
+        vertx.createHttpServer(new HttpServerOptions().setPort(8080))
+                .requestHandler(e -> handlers.handle(e, req -> new HttpContext(e)))
+                .listen(onSuccess(s ->
+                        vertx.createHttpClient(new HttpClientOptions())
+                                .getNow(8080, "localhost", "/test", res -> testComplete())));
+
+        await();
     }
 
 }

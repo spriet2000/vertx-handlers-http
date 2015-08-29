@@ -23,6 +23,22 @@ Handlers-http provides a minimal and adaptable interface for developing web appl
                 .listen();
 
 ```
+### Custom context
+
+```java 
+
+        Handler<Throwable> exception = logger::error;
+        Handler<Object> success = logger::info;
+
+        RequestHandlers<HttpContext> handlers =
+                new RequestHandlers<>(exception, success);
+
+        handlers.then((f, n) -> n::handle);
+
+        server.requestHandler(e -> handlers.handle(e, HttpContext::new))
+                .listen();
+
+```
 
 ## Installation
 

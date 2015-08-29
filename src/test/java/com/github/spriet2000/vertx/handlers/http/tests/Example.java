@@ -18,7 +18,7 @@ import org.junit.Test;
 
 public class Example  extends HttpTestBase {
 
-    Logger logger = LoggerFactory.getLogger(BombTests.class);
+    Logger logger = LoggerFactory.getLogger(Example.class);
 
     @Before
     public void setup() {
@@ -27,7 +27,7 @@ public class Example  extends HttpTestBase {
     }
 
     @Test
-    public void example(){
+    public void example1(){
 
         Handler<Throwable> exception = logger::error;
         Handler<Object> success = logger::info;
@@ -44,5 +44,18 @@ public class Example  extends HttpTestBase {
                 .listen();
     }
 
+    @Test
+    public void example2(){
 
+        Handler<Throwable> exception = logger::error;
+        Handler<Object> success = logger::info;
+
+        RequestHandlers<HttpContext> handlers =
+                new RequestHandlers<>(exception, success);
+
+        handlers.then((f, n) -> n::handle);
+
+        server.requestHandler(e -> handlers.handle(e, HttpContext::new))
+                .listen();
+    }
 }
