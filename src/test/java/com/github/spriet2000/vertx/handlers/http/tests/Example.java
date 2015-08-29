@@ -53,7 +53,7 @@ public class Example  extends HttpTestBase {
         RequestHandlers<HttpContext> handlers =
                 new RequestHandlers<>(exception, success);
 
-        handlers.then((f, n) -> n::handle);
+        handlers.then((f, n) -> e -> e.request().response().end());
 
         server.requestHandler(e -> handlers.handle(e, HttpContext::new))
                 .listen();
