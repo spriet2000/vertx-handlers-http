@@ -1,10 +1,12 @@
 package com.github.spriet2000.vertx.handlers.http.server.ext.impl;
 
-import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServerRequest;
 
-public class TimeOutHandler implements java.util.function.BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>> {
+import java.util.function.BiFunction;
+
+public class TimeOutHandler implements BiFunction<Handler<Throwable>, Handler<Object>, Handler<HttpServerRequest>> {
 
     private final Vertx vertx;
     private final long time;
@@ -20,10 +22,10 @@ public class TimeOutHandler implements java.util.function.BiFunction<Handler<Thr
     }
 
     @Override
-    public Handler<RequestContext> apply(Handler<Throwable> fail, Handler<Object> next) {
+    public Handler<HttpServerRequest> apply(Handler<Throwable> fail, Handler<Object> next) {
         return context -> {
             long id = vertx.setTimer(time, c -> fail.handle(new RuntimeException()));
-            context.request().response().bodyEndHandler(e -> vertx.cancelTimer(id));
+            context.response().bodyEndHandler(e -> vertx.cancelTimer(id));
             next.handle(context);
         };
     }

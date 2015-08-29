@@ -1,12 +1,14 @@
 package com.github.spriet2000.vertx.handlers.http.server.ext.impl;
 
-import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
 import io.vertx.core.Handler;
+import io.vertx.core.http.HttpServerRequest;
 
-public class CatchHandler implements java.util.function.BiFunction<Handler<Throwable>, Handler<Object>, Handler<RequestContext>> {
+import java.util.function.BiFunction;
+
+public class CatchHandler implements BiFunction<Handler<Throwable>, Handler<Object>, Handler<HttpServerRequest>> {
 
     @Override
-    public Handler<RequestContext> apply(Handler<Throwable> fail, Handler<Object> next) {
+    public Handler<HttpServerRequest> apply(Handler<Throwable> fail, Handler<Object> next) {
         return context -> {
             try {
                 next.handle(context);

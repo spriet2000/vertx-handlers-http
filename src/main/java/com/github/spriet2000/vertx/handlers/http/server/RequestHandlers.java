@@ -14,12 +14,6 @@ public final class RequestHandlers<E> implements Handler<HttpServerRequest>, Han
 
     private Handlers<E> requestHandlers;
 
-    private Function<HttpServerRequest, ?> supplier = RequestContext::new;
-
-    public static RequestHandlers handlers(Handler<Throwable> exceptionHandler, Handler<Object> successHandler) {
-        return new RequestHandlers(exceptionHandler, successHandler);
-    }
-
     public static RequestHandlers handlers(RequestHandlers handlers) {
         return new RequestHandlers(handlers);
     }
@@ -42,13 +36,12 @@ public final class RequestHandlers<E> implements Handler<HttpServerRequest>, Han
         return this;
     }
 
-    public void handle(HttpServerRequest request, Function<HttpServerRequest, ?> supplier) {
-        this.supplier = supplier;
-        requestHandlers.handle((E) supplier.apply(request));
+    public void handle(HttpServerRequest request, Function<HttpServerRequest, E> factory) {
+          requestHandlers.handle(factory.apply(request));
     }
 
     public void handle(HttpServerRequest request) {
-        requestHandlers.handle((E) supplier.apply(request));
+        requestHandlers.handle((E) request);
     }
 
     @Override

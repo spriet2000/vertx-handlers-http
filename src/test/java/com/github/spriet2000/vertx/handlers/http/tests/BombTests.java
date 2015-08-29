@@ -1,11 +1,11 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
 
-import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
 import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.test.core.HttpTestBase;
@@ -30,7 +30,7 @@ public class BombTests extends HttpTestBase {
         Handler<Throwable> exception = e -> {};
         Handler<Object> success = e -> {};
 
-        RequestHandlers<RequestContext> handlers = new RequestHandlers<>(exception, success);
+        RequestHandlers<HttpServerRequest> handlers = new RequestHandlers<>(exception, success);
 
         handlers.then((f, n) -> n::handle,
                 (f, n) -> n::handle,
@@ -41,7 +41,7 @@ public class BombTests extends HttpTestBase {
                 (f, n) -> n::handle,
                 (f, n) -> n::handle,
                 (f, n) -> n::handle,
-                (f, n) -> ctx -> ctx.request().response().end());
+                (f, n) -> request -> request.response().end());
 
         int bombs = 2000;
         CountDownLatch startSignal = new CountDownLatch(bombs);

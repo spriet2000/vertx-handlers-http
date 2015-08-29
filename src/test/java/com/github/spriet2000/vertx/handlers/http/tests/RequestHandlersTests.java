@@ -1,6 +1,5 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
-import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
 import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
 import io.vertx.core.Handler;
 import org.junit.Test;
@@ -20,14 +19,14 @@ public class RequestHandlersTests {
         Handler<Throwable> exception = e -> hitException.set(true);
         Handler<Object> success = s -> hitComplete.set(true);
 
-        RequestHandlers<RequestContext> handlers = new RequestHandlers<>(exception, success);
+        RequestHandlers<Void> handlers = new RequestHandlers<>(exception, success);
 
         handlers.then((f, n) -> n::handle,
                 (f, n) -> n::handle,
                 (f, n) -> n::handle,
                 (f, n) -> n::handle);
 
-        handlers.handle(null, RequestContext::new);
+        handlers.handle(null);
 
         assertEquals(false, hitException.get());
         assertEquals(true, hitComplete.get());
@@ -42,14 +41,14 @@ public class RequestHandlersTests {
         Handler<Throwable> exception = e -> hitException.set(true);
         Handler<Object> success = s -> hitComplete.set(true);
 
-        RequestHandlers<RequestContext> handlers = new RequestHandlers<>(exception, success);
+        RequestHandlers<Void> handlers = new RequestHandlers<>(exception, success);
 
         handlers.then((f, n) -> n::handle,
                 (f, n) -> n::handle,
                 (f, n) -> c -> f.handle(new RuntimeException()),
                 (f, n) -> n::handle);
 
-        handlers.handle(null, RequestContext::new);
+        handlers.handle(null);
 
         assertEquals(true, hitException.get());
         assertEquals(false, hitComplete.get());

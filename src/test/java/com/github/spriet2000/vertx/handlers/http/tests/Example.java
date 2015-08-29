@@ -1,10 +1,10 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
-import com.github.spriet2000.vertx.handlers.http.server.RequestContext;
 import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.test.core.HttpTestBase;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class Example  extends HttpTestBase {
         Handler<Throwable> exception = e -> {};
         Handler<Object> success = e -> {};
 
-        RequestHandlers<RequestContext> handlers =
+        RequestHandlers<HttpServerRequest> handlers =
                 new RequestHandlers<>(exception, success);
 
         handlers.then((f, n) -> n::handle,
@@ -32,9 +32,9 @@ public class Example  extends HttpTestBase {
                 (f, n) -> n::handle,
                 (f, n) -> n::handle,
                 (f, n) -> n::handle,
-                (f, n) -> ctx -> ctx.request().response().end());
+                (f, n) -> request -> request.response().end());
 
-        server.requestHandler(e -> handlers.handle(e,
-                c -> new RequestContext(e))).listen();
+        server.requestHandler(handlers::handle)
+                .listen();
     }
 }

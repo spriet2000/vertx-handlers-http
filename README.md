@@ -11,7 +11,7 @@ Handlers-http provides a minimal and adaptable interface for developing web appl
         Handler<Throwable> exception = e -> {};
         Handler<Object> success = e -> {};
 
-        RequestHandlers<RequestContext> handlers = 
+        RequestHandlers<HttpServerRequest> handlers =
                 new RequestHandlers<>(exception, success);
 
         handlers.then((f, n) -> n::handle,
@@ -19,9 +19,10 @@ Handlers-http provides a minimal and adaptable interface for developing web appl
                 (f, n) -> n::handle,
                 (f, n) -> n::handle,
                 (f, n) -> n::handle,
-                (f, n) -> ctx -> ctx.request().response().end());
+                (f, n) -> request -> request.response().end());
 
-        server.requestHandler(handlers).listen();
+        server.requestHandler(handlers::handle)
+                .listen();
 
 ```
 
