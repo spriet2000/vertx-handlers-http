@@ -17,15 +17,15 @@ public class RequestHandlersTests extends HttpTestBase {
     Logger logger = LoggerFactory.getLogger(RequestHandlersTests.class);
 
     @Test
-    public void success(){
+    public void success() {
 
         AtomicBoolean hitException = new AtomicBoolean(false);
         AtomicBoolean hitComplete = new AtomicBoolean(false);
 
-        BiConsumer<Void, Throwable> exception = (e, a) -> hitException.set(true);
-        BiConsumer<Void, Object> success = (e, a) -> hitComplete.set(true);
+        BiConsumer<Object, Throwable> exception = (e, a) -> hitException.set(true);
+        BiConsumer<Object, Void> success = (e, a) -> hitComplete.set(true);
 
-        RequestHandlers<Void> handlers = new RequestHandlers<>(exception, success);
+        RequestHandlers<Void, Void> handlers = new RequestHandlers<>(exception, success);
 
         handlers.andThen((f, n) -> (e, a) -> n.accept(a),
                 (f, n) -> (e, a) -> n.accept(a),
@@ -39,15 +39,15 @@ public class RequestHandlersTests extends HttpTestBase {
     }
 
     @Test
-    public void fail(){
+    public void fail() {
 
         AtomicBoolean hitException = new AtomicBoolean(false);
         AtomicBoolean hitComplete = new AtomicBoolean(false);
 
-        BiConsumer<Void, Throwable> exception = (e, a) -> hitException.set(true);
-        BiConsumer<Void, Object> success = (e, a) -> hitComplete.set(true);
+        BiConsumer<Object, Throwable> exception = (e, a) -> hitException.set(true);
+        BiConsumer<Object, Void> success = (e, a) -> hitComplete.set(true);
 
-        RequestHandlers<Void> handlers = new RequestHandlers<>(exception, success);
+        RequestHandlers<Void, Void> handlers = new RequestHandlers<>(exception, success);
 
         handlers.andThen((f, n) -> (e, a) -> n.accept(a),
                 (f, n) -> (e, a) -> n.accept(a),
@@ -61,12 +61,12 @@ public class RequestHandlersTests extends HttpTestBase {
     }
 
     @Test
-    public void testHttpContext(){
+    public void testHttpContext() {
 
-        BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
-        BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
+        BiConsumer<Object, Throwable> exception = (e, a) -> logger.error(a);
+        BiConsumer<Object, Object> success = (e, a) -> logger.info(a);
 
-        RequestHandlers<HttpServerRequest> handlers = new RequestHandlers<>(exception, success);
+        RequestHandlers<HttpServerRequest, Object> handlers = new RequestHandlers<>(exception, success);
         handlers.andThen((f, n) -> (e, a) -> n.accept(a),
                 (f, n) -> (e, a) -> e.response().end());
 

@@ -25,13 +25,14 @@ public class BombTests extends HttpTestBase {
     }
 
     @Test
-    public void bomb(){
+    public void bomb() {
 
-        BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
-        BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
+        BiConsumer<Object, Throwable> exception = (e, a) -> logger.error(a);
+        BiConsumer<Object, Object> success = (e, a) -> logger.info(a);
 
-        RequestHandlers<HttpServerRequest> handlers = new RequestHandlers<>(exception, success);
+        RequestHandlers<HttpServerRequest, Object> handlers = new RequestHandlers<>(exception, success);
         handlers.andThen((f, n) -> (e, a) -> e.response().end());
+
 
         int bombs = 2000;
         CountDownLatch startSignal = new CountDownLatch(bombs);

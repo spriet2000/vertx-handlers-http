@@ -17,7 +17,7 @@ import org.junit.Test;
 import java.util.function.BiConsumer;
 
 
-public class Example  extends HttpTestBase {
+public class Example extends HttpTestBase {
 
     Logger logger = LoggerFactory.getLogger(Example.class);
 
@@ -28,12 +28,12 @@ public class Example  extends HttpTestBase {
     }
 
     @Test
-    public void example1(){
+    public void example1() {
 
-        BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
-        BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
+        BiConsumer<Object, Throwable> exception = (e, a) -> logger.error(a);
+        BiConsumer<Object, Object> success = (e, a) -> logger.info(a);
 
-        RequestHandlers<HttpServerRequest> handlers =
+        RequestHandlers<HttpServerRequest, Object> handlers =
                 new RequestHandlers<>(exception, success);
 
         handlers.andThen(new ExceptionHandler(),

@@ -13,12 +13,12 @@ public class ResponseTimeHandler implements BiFunction<Consumer<Throwable>, Cons
         return (req, arg) -> {
             long start = System.nanoTime();
             req.response().headersEndHandler(e -> {
-                    if (!req.response().headWritten()) {
-                        req.response().headers().add("X-Response-Time",
-                                String.format("%sms", (System.nanoTime() - start) / (double) 1000000));
-                        e.complete();
-                    }
-                });
+                if (!req.response().headWritten()) {
+                    req.response().headers().add("X-Response-Time",
+                            String.format("%sms", (System.nanoTime() - start) / (double) 1000000));
+                    e.complete();
+                }
+            });
             next.accept(arg);
         };
     }

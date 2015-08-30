@@ -11,7 +11,7 @@ public class EndHandler implements BiFunction<Consumer<Throwable>, Consumer<Obje
     @Override
     public BiConsumer<HttpServerRequest, Object> apply(Consumer<Throwable> fail, Consumer<Object> next) {
         return (req, arg) -> {
-            if(req != null && ! req.isEnded()){
+            if (req != null && !req.isEnded()) {
                 req.response().end();
             }
             next.accept(arg);
