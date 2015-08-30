@@ -22,7 +22,7 @@ public class RequestHandlersTests extends HttpTestBase {
         AtomicBoolean hitException = new AtomicBoolean(false);
         AtomicBoolean hitComplete = new AtomicBoolean(false);
 
-        BiConsumer<Object, Throwable> exception = (e, a) -> hitException.set(true);
+        BiConsumer<StringBuilder, Throwable> exception = (e, a) -> hitException.set(true);
         BiConsumer<StringBuilder, Void> success = (e, a) -> hitComplete.set(true);
 
         Handlers<StringBuilder, Void> handlers = new Handlers<>(
@@ -43,7 +43,7 @@ public class RequestHandlersTests extends HttpTestBase {
         AtomicBoolean hitException = new AtomicBoolean(false);
         AtomicBoolean hitComplete = new AtomicBoolean(false);
 
-        BiConsumer<Object, Throwable> exception = (e, a) -> hitException.set(true);
+        BiConsumer<Void, Throwable> exception = (e, a) -> hitException.set(true);
         BiConsumer<Void, Void> success = (e, a) -> hitComplete.set(true);
 
         Handlers<Void, Void> handlers = new Handlers<>();
@@ -62,7 +62,7 @@ public class RequestHandlersTests extends HttpTestBase {
     @Test
     public void testHttpContext() {
 
-        BiConsumer<Object, Throwable> exception = (e, a) -> logger.error(a);
+        BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
         BiConsumer<HttpServerRequest, Void> success = (e, a) -> logger.info(a);
 
         Handlers<HttpServerRequest, Void> handlers = new Handlers<>();

@@ -27,7 +27,7 @@ public class BombTests extends HttpTestBase {
     @Test
     public void bomb() {
 
-        BiConsumer<Object, Throwable> exception = (e, a) -> logger.error(a);
+        BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
         BiConsumer<HttpServerRequest, Void> success = (e, a) -> logger.info(a);
 
         Handlers<HttpServerRequest, Void> handlers = new Handlers<>();
