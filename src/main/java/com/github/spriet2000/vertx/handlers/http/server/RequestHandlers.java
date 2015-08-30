@@ -1,65 +1,39 @@
 package com.github.spriet2000.vertx.handlers.http.server;
 
-import com.github.spriet2000.vertx.handlers.Handleable;
-import com.github.spriet2000.vertx.handlers.Handlers;
-import io.vertx.core.Handler;
-import io.vertx.core.http.HttpServerRequest;
+import com.github.spriet2000.handlers.Handlers;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 
-public final class RequestHandlers<E> implements Handleable<E> {
+public final class RequestHandlers<E> {
 
     private Handlers<E> requestHandlers;
 
-    public RequestHandlers(Handler<Throwable> exceptionHandler, Handler<Object> successHandler) {
+    public RequestHandlers(BiConsumer<E, Throwable> exceptionHandler, BiConsumer<E, Object> successHandler) {
         requestHandlers = new Handlers<>(exceptionHandler, successHandler);
     }
 
-    public RequestHandlers(Handleable<E> handleable) {
-        requestHandlers = new Handlers<>(handleable.exceptionHandler(), handleable.successHandler());
-        for (BiFunction<Handler<Throwable>, Handler<Object>, Handler<E>> handler : handleable.handlers()) {
-            requestHandlers.handlers().add(handler);
-        }
-    }
-
-    public RequestHandlers handlers(BiFunction<Handler<Throwable>, Handler<Object>, Handler<E>>... handlers) {
-        for (BiFunction<Handler<Throwable>, Handler<Object>, Handler<E>> handler : handlers) {
-            requestHandlers.handlers().add(handler);
+    public RequestHandlers<E> handlers(BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<E, Object>>... handlers) {
+        for (BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<E, Object>> handler : handlers) {
+            requestHandlers.andThen(handler);
         }
         return this;
     }
 
-    public void handle(HttpServerRequest request, Function<HttpServerRequest, E> factory) {
-          requestHandlers.handle(factory.apply(request));
+    public void handle(E request, Object arg) {
+          requestHandlers.accept(request, arg);
     }
 
-    @Override
-    public List<BiFunction<Handler<Throwable>, Handler<Object>, Handler<E>>> handlers() {
+    public List<BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<E, Object>>> handlers() {
         return requestHandlers.handlers();
     }
 
-    @Override
-    public Handler<Throwable> exceptionHandler() {
-        return requestHandlers.exceptionHandler();
-    }
-
-    @Override
-    public Handler<Object> successHandler() {
-        return requestHandlers.successHandler();
-    }
-
-    public RequestHandlers then(BiFunction<Handler<Throwable>, Handler<Object>, Handler<E>> handler){
-        requestHandlers.then(handler);
-        return this;
-    }
-
-    @SafeVarargs
-    public final RequestHandlers then(BiFunction<Handler<Throwable>, Handler<Object>, Handler<E>>... handlers){
-        for (BiFunction<Handler<Throwable>, Handler<Object>, Handler<E>> handler : handlers) {
-            then(handler);
+    public RequestHandlers<E> andThen(BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<E, Object>>... handlers){
+        for (BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<E, Object>> handler : handlers) {
+            requestHandlers.andThen(handler);
         }
         return this;
     }
