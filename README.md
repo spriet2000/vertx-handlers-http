@@ -8,18 +8,17 @@ Handlers-http provides a minimal and adaptable interface for developing web appl
 
 ```java 
     
-BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
+BiConsumer<Object, Throwable> exception = (e, a) -> logger.error(a);
 BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
 
-RequestHandlers<HttpServerRequest> handlers =
-        new RequestHandlers<>(exception, success);
+Handlers<HttpServerRequest> handlers = new Handlers<>();
 
 handlers.andThen(new ExceptionHandler(),
         new ResponseTimeHandler(),
         new TimeOutHandler(vertx),
         new EndHandler());
 
-server.requestHandler(e -> handlers.handle(e, null))
+server.requestHandler(e -> handlers.accept(e, null, exception, success))
         .listen();
 
 ```
