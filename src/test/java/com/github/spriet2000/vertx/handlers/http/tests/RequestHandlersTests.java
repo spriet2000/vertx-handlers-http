@@ -23,7 +23,7 @@ public class RequestHandlersTests extends HttpTestBase {
         AtomicBoolean hitComplete = new AtomicBoolean(false);
 
         BiConsumer<Object, Throwable> exception = (e, a) -> hitException.set(true);
-        BiConsumer<Object, Void> success = (e, a) -> hitComplete.set(true);
+        BiConsumer<Object, Object> success = (e, a) -> hitComplete.set(true);
 
         RequestHandlers<Void, Void> handlers = new RequestHandlers<>(exception, success);
 
@@ -45,7 +45,7 @@ public class RequestHandlersTests extends HttpTestBase {
         AtomicBoolean hitComplete = new AtomicBoolean(false);
 
         BiConsumer<Object, Throwable> exception = (e, a) -> hitException.set(true);
-        BiConsumer<Object, Void> success = (e, a) -> hitComplete.set(true);
+        BiConsumer<Object, Object> success = (e, a) -> hitComplete.set(true);
 
         RequestHandlers<Void, Void> handlers = new RequestHandlers<>(exception, success);
 

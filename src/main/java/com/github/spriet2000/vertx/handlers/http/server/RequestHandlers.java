@@ -10,7 +10,7 @@ public final class RequestHandlers<E, A> {
 
     private com.github.spriet2000.handlers.Handlers requestHandlers;
 
-    public RequestHandlers(BiConsumer<Object, Throwable> exceptionHandler, BiConsumer<Object, A> successHandler) {
+    public RequestHandlers(BiConsumer<Object, Throwable> exceptionHandler, BiConsumer<Object, Object> successHandler) {
         requestHandlers = new com.github.spriet2000.handlers.Handlers(exceptionHandler, successHandler);
     }
 
