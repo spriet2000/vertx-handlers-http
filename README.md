@@ -8,19 +8,19 @@ Handlers-http provides a minimal and adaptable interface for developing web appl
 
 ```java 
     
-    BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
-    BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
-    
-    RequestHandlers<HttpServerRequest> handlers =
-            new RequestHandlers<>(exception, success);
-    
-    handlers.andThen(new ExceptionHandler(),
-            new ResponseTimeHandler(),
-            new TimeOutHandler(vertx),
-            new EndHandler());
-    
-    server.requestHandler(e -> handlers.handle(e, null))
-            .listen();
+BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
+BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
+
+RequestHandlers<HttpServerRequest> handlers =
+        new RequestHandlers<>(exception, success);
+
+handlers.andThen(new ExceptionHandler(),
+        new ResponseTimeHandler(),
+        new TimeOutHandler(vertx),
+        new EndHandler());
+
+server.requestHandler(e -> handlers.handle(e, null))
+        .listen();
 
 ```
 
@@ -30,17 +30,17 @@ Handlers-http provides a minimal and adaptable interface for developing web appl
 
 ```xml
 
-    <dependency>
-        <groupId>com.github.spriet2000</groupId>
-        <artifactId>vertx-handlers</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
-    </dependency>
+<dependency>
+    <groupId>com.github.spriet2000</groupId>
+    <artifactId>vertx-handlers</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
 
-    <dependency>
-        <groupId>com.github.spriet2000</groupId>
-        <artifactId>vertx-handlers-http</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
-    </dependency>
+<dependency>
+    <groupId>com.github.spriet2000</groupId>
+    <artifactId>vertx-handlers-http</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
 
 ```
 
