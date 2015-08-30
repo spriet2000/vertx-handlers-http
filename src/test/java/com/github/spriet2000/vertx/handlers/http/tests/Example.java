@@ -14,8 +14,6 @@ import io.vertx.test.core.HttpTestBase;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.function.BiConsumer;
-
 
 public class Example extends HttpTestBase {
 
@@ -30,17 +28,14 @@ public class Example extends HttpTestBase {
     @Test
     public void example1() {
 
-        BiConsumer<Object, Throwable> exception = (e, a) -> logger.error(a);
-        BiConsumer<HttpServerRequest, Void> success = (e, a) -> logger.info(a);
-
-        Handlers<HttpServerRequest, Void> handlers = new Handlers<>();
-
-        handlers.andThen(new ExceptionHandler(),
+        Handlers<HttpServerRequest, Void> handlers = new Handlers<>(
+                new ExceptionHandler(),
                 new ResponseTimeHandler(),
                 new TimeOutHandler(vertx),
                 new EndHandler());
 
-        server.requestHandler(e -> handlers.accept(e, null, exception, success))
-                .listen();
+        server.requestHandler(e -> handlers.accept(e, null,
+                (e1, a) -> logger.error(a),
+                (e2, a) -> logger.info(a))).listen();
     }
 }
