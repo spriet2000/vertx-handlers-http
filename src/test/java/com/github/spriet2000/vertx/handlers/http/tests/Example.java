@@ -1,6 +1,6 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
-import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
+import com.github.spriet2000.handlers.Handlers;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.EndHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ExceptionHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ResponseTimeHandler;
@@ -31,17 +31,16 @@ public class Example extends HttpTestBase {
     public void example1() {
 
         BiConsumer<Object, Throwable> exception = (e, a) -> logger.error(a);
-        BiConsumer<Object, Object> success = (e, a) -> logger.info(a);
+        BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
 
-        RequestHandlers<HttpServerRequest, Object> handlers =
-                new RequestHandlers<>(exception, success);
+        Handlers<HttpServerRequest> handlers = new Handlers<>();
 
         handlers.andThen(new ExceptionHandler(),
                 new ResponseTimeHandler(),
                 new TimeOutHandler(vertx),
                 new EndHandler());
 
-        server.requestHandler(e -> handlers.handle(e, null))
+        server.requestHandler(e -> handlers.accept(e, null, exception, success))
                 .listen();
     }
 }

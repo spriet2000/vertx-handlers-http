@@ -1,7 +1,7 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
 
-import com.github.spriet2000.vertx.handlers.http.server.RequestHandlers;
+import com.github.spriet2000.handlers.Handlers;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerRequest;
@@ -28,15 +28,14 @@ public class BombTests extends HttpTestBase {
     public void bomb() {
 
         BiConsumer<Object, Throwable> exception = (e, a) -> logger.error(a);
-        BiConsumer<Object, Object> success = (e, a) -> logger.info(a);
+        BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
 
-        RequestHandlers<HttpServerRequest, Object> handlers = new RequestHandlers<>(exception, success);
+        Handlers<HttpServerRequest> handlers = new Handlers<>();
         handlers.andThen((f, n) -> (e, a) -> e.response().end());
-
 
         int bombs = 2000;
         CountDownLatch startSignal = new CountDownLatch(bombs);
-        server.requestHandler(req -> handlers.handle(req, null)).listen(onSuccess(s -> {
+        server.requestHandler(req -> handlers.accept(req, null, exception, success)).listen(onSuccess(s -> {
             client = vertx.createHttpClient(new HttpClientOptions());
             for (int i = 0; i < bombs; i++) {
                 client.getNow(8080, "localhost", "/test",
