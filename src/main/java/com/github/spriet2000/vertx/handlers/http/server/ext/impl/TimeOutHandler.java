@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class TimeOutHandler implements BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<HttpServerRequest, Object>> {
+public class TimeOutHandler<T> implements BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<HttpServerRequest, T>> {
 
     private final Vertx vertx;
     private final long time;
@@ -23,7 +23,7 @@ public class TimeOutHandler implements BiFunction<Consumer<Throwable>, Consumer<
     }
 
     @Override
-    public BiConsumer<HttpServerRequest, Object> apply(Consumer<Throwable> fail, Consumer<Object> next) {
+    public BiConsumer<HttpServerRequest, T> apply(Consumer<Throwable> fail, Consumer<Object> next) {
         return (req, arg) -> {
             long id = vertx.setTimer(time, c -> fail.accept(new RuntimeException()));
             req.response().bodyEndHandler(e -> vertx.cancelTimer(id));

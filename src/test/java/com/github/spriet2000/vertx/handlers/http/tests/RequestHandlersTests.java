@@ -23,9 +23,9 @@ public class RequestHandlersTests extends HttpTestBase {
         AtomicBoolean hitComplete = new AtomicBoolean(false);
 
         BiConsumer<Object, Throwable> exception = (e, a) -> hitException.set(true);
-        BiConsumer<StringBuilder, Object> success = (e, a) -> hitComplete.set(true);
+        BiConsumer<StringBuilder, Void> success = (e, a) -> hitComplete.set(true);
 
-        Handlers<StringBuilder> handlers = new Handlers<>(
+        Handlers<StringBuilder, Void> handlers = new Handlers<>(
                 (f, n) -> (e, a) -> n.accept(a),
                 (f, n) -> (e, a) -> n.accept(a),
                 (f, n) -> (e, a) -> n.accept(a),
@@ -44,9 +44,9 @@ public class RequestHandlersTests extends HttpTestBase {
         AtomicBoolean hitComplete = new AtomicBoolean(false);
 
         BiConsumer<Object, Throwable> exception = (e, a) -> hitException.set(true);
-        BiConsumer<Void, Object> success = (e, a) -> hitComplete.set(true);
+        BiConsumer<Void, Void> success = (e, a) -> hitComplete.set(true);
 
-        Handlers<Void> handlers = new Handlers<>();
+        Handlers<Void, Void> handlers = new Handlers<>();
 
         handlers.andThen((f, n) -> (e, a) -> n.accept(a),
                 (f, n) -> (e, a) -> n.accept(a),
@@ -63,9 +63,9 @@ public class RequestHandlersTests extends HttpTestBase {
     public void testHttpContext() {
 
         BiConsumer<Object, Throwable> exception = (e, a) -> logger.error(a);
-        BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
+        BiConsumer<HttpServerRequest, Void> success = (e, a) -> logger.info(a);
 
-        Handlers<HttpServerRequest> handlers = new Handlers<>();
+        Handlers<HttpServerRequest, Void> handlers = new Handlers<>();
         handlers.andThen((f, n) -> (e, a) -> n.accept(a),
                 (f, n) -> (e, a) -> e.response().end());
 

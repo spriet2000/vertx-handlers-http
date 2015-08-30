@@ -31,9 +31,9 @@ public class Example extends HttpTestBase {
     public void example1() {
 
         BiConsumer<Object, Throwable> exception = (e, a) -> logger.error(a);
-        BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
+        BiConsumer<HttpServerRequest, Void> success = (e, a) -> logger.info(a);
 
-        Handlers<HttpServerRequest> handlers = new Handlers<>();
+        Handlers<HttpServerRequest, Void> handlers = new Handlers<>();
 
         handlers.andThen(new ExceptionHandler(),
                 new ResponseTimeHandler(),
