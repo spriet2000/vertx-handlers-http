@@ -21,6 +21,24 @@ server.requestHandler(e -> handlers.accept(e, null,
 
 ```
 
+```java
+
+public class EndHandler<T> implements 
+    BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<HttpServerRequest, T>> {
+
+    @Override
+    public BiConsumer<HttpServerRequest, T> apply(Consumer<Throwable> fail, Consumer<Object> next) {
+        return (req, arg) -> {
+            if (req != null && !req.isEnded()) {
+                req.response().end();
+            }
+            next.accept(arg);
+        };
+    }
+}
+
+```
+
 ## Installation
 
 ### Maven
