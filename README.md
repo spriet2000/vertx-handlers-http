@@ -20,18 +20,17 @@ server.requestHandler(e -> handlers.accept(e, null,
             .listen();
 
 ```
+### Example handler
 
 ```java
 
-public class EndHandler<T> implements 
+public class HelloWorldHandler<T> implements 
     BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<HttpServerRequest, T>> {
 
     @Override
     public BiConsumer<HttpServerRequest, T> apply(Consumer<Throwable> fail, Consumer<Object> next) {
         return (req, arg) -> {
-            if (req != null && !req.isEnded()) {
-                req.response().end();
-            }
+            req.response().write("hello world!");
             next.accept(arg);
         };
     }
