@@ -16,7 +16,8 @@ Handlers<HttpServerRequest, Void> handlers = new Handlers<>(
 
 server.requestHandler(e -> handlers.accept(e, null,
         (e, a) -> logger.error(a),
-        (e, a) -> logger.info(a))).listen();
+        (e, a) -> logger.info(a)))
+        .listen();
 
 ```
 
