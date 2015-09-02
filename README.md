@@ -24,10 +24,10 @@ server.requestHandler(e -> handlers.accept(e, null,
 
 ```java
 
-public class HelloWorldHandler<T> implements 
-    BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<HttpServerRequest, T>> {
+public class HelloWorldHandler<T> implements BiFunction<Consumer<Throwable>, Consumer<Object>, 
+                                                        BiConsumer<HttpServerRequest, T>> {
 
-    @Override
+    @Override   
     public BiConsumer<HttpServerRequest, T> apply(Consumer<Throwable> fail, Consumer<Object> next) {
         return (req, arg) -> {
             req.response().write("hello world!");
