@@ -12,7 +12,7 @@ Handlers<HttpServerRequest, Void> handlers = new Handlers<>(
         new ExceptionHandler(),
         new ResponseTimeHandler(),
         new TimeOutHandler(vertx),
-        new EndHandler());
+        new HelloWorldHandler());
 
 server.requestHandler(e -> handlers.accept(e, null,
         (e, a) -> logger.error(a),
@@ -30,7 +30,7 @@ public class HelloWorldHandler<T> implements BiFunction<Consumer<Throwable>, Con
     @Override   
     public BiConsumer<HttpServerRequest, T> apply(Consumer<Throwable> fail, Consumer<Object> next) {
         return (req, arg) -> {
-            req.response().write("hello world!");
+            req.response().end("hello world!");
             next.accept(arg);
         };
     }
