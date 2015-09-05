@@ -2,7 +2,7 @@
 
 Handlers-http provides a minimal and adaptable interface for developing web applications on the vert-x3 platform.
 
-Handlers-http is an open webframework for the vert-x3 platform. The middleware layer doesn't rely on any custom classes, so components should be easily inter-changeable with different webframeworks.
+Handlers-http is an open webframework for the vert-x3 platform. The middleware layer doesn't depend on any custom classes, so components should be easily inter-changeable with different webframeworks.
 
 Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com/build-web-framework-golang)
 
