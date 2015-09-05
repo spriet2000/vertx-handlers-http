@@ -20,8 +20,8 @@ Handlers<HttpServerRequest, Void> handlers = compose(
 
 server.requestHandler(req -> handlers.apply(
         (e, a) -> logger.error(a),
-        (e, a) -> logger.info(a))
-        .accept(req, null)).listen();
+        (e, a) -> logger.info(a)).accept(req, null))
+        .listen();
 
 ```
 

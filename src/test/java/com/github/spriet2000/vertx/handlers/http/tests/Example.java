@@ -41,8 +41,7 @@ public class Example extends HttpTestBase {
 
         server.requestHandler(req -> handlers.apply(
                 (e, a) -> logger.error(a),
-                (e, a) -> logger.info(a))
-                .accept(req, null))
+                (e, a) -> logger.info(a)).accept(req, null))
                 .listen();
     }
 
