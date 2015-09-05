@@ -14,6 +14,8 @@ import org.junit.Test;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.BiConsumer;
 
+import static com.github.spriet2000.handlers.Handlers.compose;
+
 public class BombTests extends HttpTestBase {
 
     Logger logger = LoggerFactory.getLogger(BombTests.class);
@@ -28,14 +30,16 @@ public class BombTests extends HttpTestBase {
     public void bomb() {
 
         BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
-        BiConsumer<HttpServerRequest, Void> success = (e, a) -> logger.info(a);
+        BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
 
-        Handlers<HttpServerRequest, Void> handlers = new Handlers<>();
-        handlers.andThen((f, n) -> (e, a) -> e.response().end());
+        Handlers<HttpServerRequest, Object> handlers = compose(
+                (f, n) -> (e, a) -> e.response().end());
 
         int bombs = 2000;
         CountDownLatch startSignal = new CountDownLatch(bombs);
-        server.requestHandler(req -> handlers.accept(req, null, exception, success)).listen(onSuccess(s -> {
+        server.requestHandler(req -> handlers
+                .apply(exception, success)
+                .accept(req, null)).listen(onSuccess(s -> {
             client = vertx.createHttpClient(new HttpClientOptions());
             for (int i = 0; i < bombs; i++) {
                 client.getNow(8080, "localhost", "/test",

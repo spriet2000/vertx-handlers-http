@@ -26,12 +26,12 @@ public class RequestHandlersTests extends HttpTestBase {
         BiConsumer<StringBuilder, Void> success = (e, a) -> hitComplete.set(true);
 
         Handlers<StringBuilder, Void> handlers = new Handlers<>(
-                (f, n) -> (e, a) -> n.accept(a),
-                (f, n) -> (e, a) -> n.accept(a),
-                (f, n) -> (e, a) -> n.accept(a),
-                (f, n) -> (e, a) -> n.accept(a));
+                (f, n) -> (e, a) -> n.accept(null),
+                (f, n) -> (e, a) -> n.accept(null),
+                (f, n) -> (e, a) -> n.accept(null),
+                (f, n) -> (e, a) -> n.accept(null));
 
-        handlers.accept(null, null, exception, success);
+        handlers.apply(exception, success).accept(null, null);
 
         assertEquals(false, hitException.get());
         assertEquals(true, hitComplete.get());
@@ -53,7 +53,7 @@ public class RequestHandlersTests extends HttpTestBase {
                 (f, n) -> (e, a) -> f.accept(new RuntimeException()),
                 (f, n) -> (e, a) -> n.accept(a));
 
-        handlers.accept(null, null, exception, success);
+        handlers.apply(exception, success).accept(null, null);
 
         assertEquals(true, hitException.get());
         assertEquals(false, hitComplete.get());
@@ -66,11 +66,11 @@ public class RequestHandlersTests extends HttpTestBase {
         BiConsumer<HttpServerRequest, Void> success = (e, a) -> logger.info(a);
 
         Handlers<HttpServerRequest, Void> handlers = new Handlers<>();
-        handlers.andThen((f, n) -> (e, a) -> n.accept(a),
+        handlers.andThen((f, n) -> (e, a) -> n.accept(null),
                 (f, n) -> (e, a) -> e.response().end());
 
         vertx.createHttpServer(new HttpServerOptions().setPort(8080))
-                .requestHandler(e -> handlers.accept(e, null, exception, success))
+                .requestHandler(e -> handlers.apply(exception, success).accept(e, null))
         .listen(onSuccess(s ->
                 vertx.createHttpClient(new HttpClientOptions())
                         .getNow(8080, "localhost", "/test", res -> testComplete())));

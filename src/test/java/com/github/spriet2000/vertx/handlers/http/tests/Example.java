@@ -14,6 +14,8 @@ import io.vertx.test.core.HttpTestBase;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.github.spriet2000.handlers.Handlers.compose;
+
 
 public class Example extends HttpTestBase {
 
@@ -28,14 +30,16 @@ public class Example extends HttpTestBase {
     @Test
     public void example1() {
 
-        Handlers<HttpServerRequest, Void> handlers = new Handlers<>(
+        Handlers<HttpServerRequest, Void> handlers = compose(
                 new ExceptionHandler(),
                 new ResponseTimeHandler(),
                 new TimeOutHandler(vertx),
                 new EndHandler());
 
-        server.requestHandler(e -> handlers.accept(e, null,
-                (e1, a) -> logger.error(a),
-                (e2, a) -> logger.info(a))).listen();
+        server.requestHandler(e -> handlers.apply(
+                    (e1, a) -> logger.error(a),
+                    (e2, a) -> logger.info(a))
+                    .accept(e, null))
+                .listen();
     }
 }

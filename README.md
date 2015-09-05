@@ -8,15 +8,17 @@ Handlers-http provides a minimal and adaptable interface for developing web appl
 
 ```java 
     
-Handlers<HttpServerRequest, Void> handlers = new Handlers<>(
-        new ExceptionHandler(),
-        new ResponseTimeHandler(),
-        new TimeOutHandler(vertx),
-        new EndHandler());
+    Handlers<HttpServerRequest, Void> handlers = compose(
+            new ExceptionHandler(),
+            new ResponseTimeHandler(),
+            new TimeOutHandler(vertx),
+            new EndHandler());
 
-server.requestHandler(e -> handlers.accept(e, null,
-        (e1, a) -> logger.error(a),
-        (e2, a) -> logger.info(a))).listen();
+    server.requestHandler(e -> handlers.apply(
+                (e1, a) -> logger.error(a),
+                (e2, a) -> logger.info(a))
+                .accept(e, null))
+            .listen();
 
 ```
 
