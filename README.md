@@ -24,6 +24,27 @@ Handlers-http is an open webframework for the vert-x3 platform. The middleware l
 
 ```
 
+### Example handler
+
+``` java
+
+    public class EndHandler<T> implements 
+            BiFunction<Consumer<Throwable>, Consumer<Object>,
+            BiConsumer<HttpServerRequest, T>> {
+
+        @Override
+        public BiConsumer<HttpServerRequest, T> apply(
+                Consumer<Throwable> fail, Consumer<Object> next) {
+            return (req, arg) -> {
+                req.response().end("hello world!");
+                next.accept(arg);
+            };
+        }
+    }    
+
+```
+
+
 ## Installation
 
 ### Maven

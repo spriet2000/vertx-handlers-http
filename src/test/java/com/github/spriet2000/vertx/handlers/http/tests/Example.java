@@ -1,7 +1,6 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
 import com.github.spriet2000.handlers.Handlers;
-import com.github.spriet2000.vertx.handlers.http.server.ext.impl.EndHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ExceptionHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ResponseTimeHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.TimeOutHandler;
@@ -13,6 +12,10 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.test.core.HttpTestBase;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import static com.github.spriet2000.handlers.Handlers.compose;
 
@@ -37,9 +40,23 @@ public class Example extends HttpTestBase {
                 new EndHandler());
 
         server.requestHandler(e -> handlers.apply(
-                    (e1, a) -> logger.error(a),
-                    (e2, a) -> logger.info(a))
-                        .accept(e, null))
+                (e1, a) -> logger.error(a),
+                (e2, a) -> logger.info(a))
+                .accept(e, null))
                 .listen();
+    }
+
+    public class EndHandler<T> implements
+            BiFunction<Consumer<Throwable>, Consumer<Object>,
+            BiConsumer<HttpServerRequest, T>> {
+
+        @Override
+        public BiConsumer<HttpServerRequest, T> apply(
+                Consumer<Throwable> fail, Consumer<Object> next) {
+            return (req, arg) -> {
+                req.response().end("hello world!");
+                next.accept(arg);
+            };
+        }
     }
 }
