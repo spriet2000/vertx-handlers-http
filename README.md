@@ -2,6 +2,8 @@
 
 Handlers-http provides a minimal and adaptable interface for developing web applications on the vert-x3 platform.
 
+Handlers-http is an open webframework for the vert-x3 platform. The middleware layer doesn't rely on any custom classes, so components should be easily inter-changeable with different webframeworks.
+
 [![Build Status](https://travis-ci.org/spriet2000/vertx-handlers-http.svg?branch=master)](https://travis-ci.org/spriet2000/vertx-handlers-http)
 
 ## Example
