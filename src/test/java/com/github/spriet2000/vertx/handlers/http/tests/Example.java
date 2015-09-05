@@ -39,7 +39,7 @@ public class Example extends HttpTestBase {
         server.requestHandler(e -> handlers.apply(
                     (e1, a) -> logger.error(a),
                     (e2, a) -> logger.info(a))
-                    .accept(e, null))
+                        .accept(e, null))
                 .listen();
     }
 }

@@ -17,8 +17,8 @@ Handlers-http provides a minimal and adaptable interface for developing web appl
     server.requestHandler(e -> handlers.apply(
                 (e1, a) -> logger.error(a),
                 (e2, a) -> logger.info(a))
-                .accept(e, null))
-            .listen();
+                    .accept(e, null))
+          .listen();
 
 ```
 
