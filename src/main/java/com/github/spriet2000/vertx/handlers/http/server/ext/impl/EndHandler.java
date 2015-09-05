@@ -6,10 +6,11 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class EndHandler<T> implements BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<HttpServerRequest, T>> {
+public class EndHandler<A> implements BiFunction<Consumer<Throwable>, Consumer<Object>,
+        BiConsumer<HttpServerRequest, A>> {
 
     @Override
-    public BiConsumer<HttpServerRequest, T> apply(Consumer<Throwable> fail, Consumer<Object> next) {
+    public BiConsumer<HttpServerRequest, A> apply(Consumer<Throwable> fail, Consumer<Object> next) {
         return (req, arg) -> {
             if (req != null && !req.isEnded()) {
                 req.response().end();

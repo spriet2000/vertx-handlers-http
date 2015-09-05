@@ -71,9 +71,9 @@ public class RequestHandlersTests extends HttpTestBase {
 
         vertx.createHttpServer(new HttpServerOptions().setPort(8080))
                 .requestHandler(e -> handlers.apply(exception, success).accept(e, null))
-        .listen(onSuccess(s ->
-                vertx.createHttpClient(new HttpClientOptions())
-                        .getNow(8080, "localhost", "/test", res -> testComplete())));
+                .listen(onSuccess(s ->
+                    vertx.createHttpClient(new HttpClientOptions())
+                            .getNow(8080, "localhost", "/test", res -> testComplete())));
 
         await();
     }

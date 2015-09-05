@@ -12,17 +12,16 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ```java 
     
-    Handlers<HttpServerRequest, Void> handlers = compose(
-            new ExceptionHandler(),
-            new ResponseTimeHandler(),
-            new TimeOutHandler(vertx),
-            new EndHandler());
+Handlers<HttpServerRequest, Void> handlers = compose(
+        new ExceptionHandler(),
+        new ResponseTimeHandler(),
+        new TimeOutHandler(vertx),
+        new EndHandler());
 
-    server.requestHandler(e -> handlers.apply(
-                (e1, a) -> logger.error(a),
-                (e2, a) -> logger.info(a))
-                    .accept(e, null))
-          .listen();
+server.requestHandler(req -> handlers.apply(
+        (e, a) -> logger.error(a),
+        (e, a) -> logger.info(a))
+        .accept(req, null)).listen();
 
 ```
 
@@ -30,19 +29,19 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ``` java
 
-    public class EndHandler<T> implements 
-            BiFunction<Consumer<Throwable>, Consumer<Object>,
-            BiConsumer<HttpServerRequest, T>> {
+public class EndHandler<A> implements 
+        BiFunction<Consumer<Throwable>, Consumer<Object>,
+            BiConsumer<HttpServerRequest, A>> {
 
-        @Override
-        public BiConsumer<HttpServerRequest, T> apply(
-                Consumer<Throwable> fail, Consumer<Object> next) {
+    @Override
+    public BiConsumer<HttpServerRequest, T> 
+        apply(Consumer<Throwable> fail, Consumer<Object> next) {
             return (req, arg) -> {
                 req.response().end("hello world!");
                 next.accept(arg);
             };
-        }
-    }    
+    }
+}    
 
 ```
 

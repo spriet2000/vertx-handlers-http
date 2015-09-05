@@ -39,24 +39,24 @@ public class Example extends HttpTestBase {
                 new TimeOutHandler(vertx),
                 new EndHandler());
 
-        server.requestHandler(e -> handlers.apply(
-                (e1, a) -> logger.error(a),
-                (e2, a) -> logger.info(a))
-                .accept(e, null))
+        server.requestHandler(req -> handlers.apply(
+                (e, a) -> logger.error(a),
+                (e, a) -> logger.info(a))
+                .accept(req, null))
                 .listen();
     }
 
     public class EndHandler<T> implements
             BiFunction<Consumer<Throwable>, Consumer<Object>,
-            BiConsumer<HttpServerRequest, T>> {
+                BiConsumer<HttpServerRequest, T>> {
 
         @Override
-        public BiConsumer<HttpServerRequest, T> apply(
-                Consumer<Throwable> fail, Consumer<Object> next) {
-            return (req, arg) -> {
-                req.response().end("hello world!");
-                next.accept(arg);
-            };
-        }
+        public BiConsumer<HttpServerRequest, T>
+            apply(Consumer<Throwable> fail, Consumer<Object> next) {
+                return (req, arg) -> {
+                    req.response().end("hello world!");
+                    next.accept(arg);
+                };
+            }
     }
 }

@@ -6,10 +6,11 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class ResponseTimeHandler<T> implements BiFunction<Consumer<Throwable>, Consumer<Object>, BiConsumer<HttpServerRequest, T>> {
+public class ResponseTimeHandler<A> implements BiFunction<Consumer<Throwable>, Consumer<Object>,
+        BiConsumer<HttpServerRequest, A>> {
 
     @Override
-    public BiConsumer<HttpServerRequest, T> apply(Consumer<Throwable> fail, Consumer<Object> next) {
+    public BiConsumer<HttpServerRequest, A> apply(Consumer<Throwable> fail, Consumer<Object> next) {
         return (req, arg) -> {
             long start = System.nanoTime();
             req.response().headersEndHandler(e -> {
