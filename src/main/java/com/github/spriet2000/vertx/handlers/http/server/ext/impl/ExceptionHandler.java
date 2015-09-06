@@ -6,11 +6,11 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class ExceptionHandler<A> implements BiFunction<Consumer<Throwable>, Consumer<Object>,
+public class ExceptionHandler<A> implements BiFunction<Consumer<Throwable>, Consumer<A>,
         BiConsumer<HttpServerRequest, A>> {
 
     @Override
-    public BiConsumer<HttpServerRequest, A> apply(Consumer<Throwable> fail, Consumer<Object> next) {
+    public BiConsumer<HttpServerRequest, A> apply(Consumer<Throwable> fail, Consumer<A> next) {
         return (req, arg) -> {
             try {
                 next.accept(arg);

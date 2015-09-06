@@ -54,7 +54,7 @@ public class EndHandler<A> implements
 
 <dependency>
     <groupId>com.github.spriet2000</groupId>
-    <artifactId>vertx-handlers</artifactId>
+    <artifactId>handlers</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 </dependency>
 

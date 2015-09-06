@@ -33,7 +33,7 @@ public class Example extends HttpTestBase {
     @Test
     public void example1() {
 
-        Handlers<HttpServerRequest, Void> handlers = compose(
+        Handlers<HttpServerRequest, Object> handlers = compose(
                 new ExceptionHandler(),
                 new ResponseTimeHandler(),
                 new TimeOutHandler(vertx),
