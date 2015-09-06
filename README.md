@@ -66,7 +66,7 @@ public class EndHandler<A> implements
 
 ```
 
-[https://github.com/spriet2000/vertx-handlers-http-example](Example)
+[https://github.com/spriet2000/vertx-handlers-http-example](https://github.com/spriet2000/vertx-handlers-http-example)
 
 
 ### Without maven
