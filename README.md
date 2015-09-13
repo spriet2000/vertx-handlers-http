@@ -12,15 +12,17 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ```java 
     
-Handlers<HttpServerRequest, Void> handlers = compose(
-        new ExceptionHandler(),
-        new ResponseTimeHandler(),
-        new TimeOutHandler(vertx),
-        new EndHandler());
+Handlers<HttpServerRequest, Object> handlers = compose(
+        new ExceptionHandler<>(),
+        new ResponseTimeHandler<>(),
+        new TimeOutHandler<>(vertx),
+        new EndHandler<>());
 
-server.requestHandler(req -> handlers.apply(
+BiConsumer<HttpServerRequest, Object> handler = handlers.apply(
         (e, a) -> logger.error(a),
-        (e, a) -> logger.info(a)).accept(req, null))
+        (e, a) -> logger.info(a));
+
+server.requestHandler(req -> handler.accept(req, null))
         .listen();
 
 ```
