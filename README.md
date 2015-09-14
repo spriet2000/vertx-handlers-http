@@ -36,8 +36,8 @@ public class EndHandler<A> implements
             BiConsumer<HttpServerRequest, A>> {
 
     @Override
-    public BiConsumer<HttpServerRequest, T> 
-        apply(Consumer<Throwable> fail, Consumer<Object> next) {
+    public BiConsumer<HttpServerRequest, A> 
+        apply(Consumer<Throwable> fail, Consumer<A> next) {
             return (req, arg) -> {
                 req.response().end("hello world!");
                 next.accept(arg);
