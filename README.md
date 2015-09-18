@@ -46,6 +46,8 @@ public class EndHandler<A> implements
 }    
 
 ```
+## Example project
+
 [https://github.com/spriet2000/vertx-handlers-http-example](https://github.com/spriet2000/vertx-handlers-http-example)
 
 ## Installation
