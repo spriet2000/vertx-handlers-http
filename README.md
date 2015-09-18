@@ -50,6 +50,9 @@ public class EndHandler<A> implements
 
 [https://github.com/spriet2000/vertx-handlers-http-example](https://github.com/spriet2000/vertx-handlers-http-example)
 
+## See also
+[https://github.com/spriet2000/handlers](https://github.com/spriet2000/handlers)
+
 ## Installation
 
 ### Maven
