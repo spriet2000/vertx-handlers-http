@@ -23,7 +23,8 @@ public class TimeOutHandler<A> implements BiFunction<BiConsumer<HttpServerReques
     }
 
     @Override
-    public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail, BiConsumer<HttpServerRequest, A> next) {
+    public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail,
+                                                  BiConsumer<HttpServerRequest, A> next) {
         return (req, arg) -> {
             long id = vertx.setTimer(time, c -> fail.accept(req, new RuntimeException()));
             req.response().bodyEndHandler(e -> vertx.cancelTimer(id));

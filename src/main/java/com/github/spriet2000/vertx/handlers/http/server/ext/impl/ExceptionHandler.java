@@ -9,7 +9,8 @@ public class ExceptionHandler<A> implements BiFunction<BiConsumer<HttpServerRequ
         BiConsumer<HttpServerRequest, A>> {
 
     @Override
-    public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail, BiConsumer<HttpServerRequest, A> next) {
+    public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail,
+                                                  BiConsumer<HttpServerRequest, A> next) {
         return (req, arg) -> {
             try {
                 next.accept(req, arg);

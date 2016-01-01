@@ -9,7 +9,8 @@ public class ResponseTimeHandler<A> implements BiFunction<BiConsumer<HttpServerR
         BiConsumer<HttpServerRequest, A>> {
 
     @Override
-    public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail, BiConsumer<HttpServerRequest, A> next) {
+    public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail,
+                                                  BiConsumer<HttpServerRequest, A> next) {
         return (req, arg) -> {
             long start = System.nanoTime();
             req.response().headersEndHandler(e -> {
