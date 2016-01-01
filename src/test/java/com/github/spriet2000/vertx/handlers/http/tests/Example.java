@@ -1,6 +1,6 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
-import com.github.spriet2000.handlers.Handlers;
+import com.github.spriet2000.handlers.BiHandlers;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ExceptionHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ResponseTimeHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.TimeOutHandler;
@@ -15,9 +15,8 @@ import org.junit.Test;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 
-import static com.github.spriet2000.handlers.Handlers.compose;
+import static com.github.spriet2000.handlers.BiHandlers.compose;
 
 
 public class Example extends HttpTestBase {
@@ -33,7 +32,7 @@ public class Example extends HttpTestBase {
     @Test
     public void example1() {
 
-        Handlers<HttpServerRequest, Object> handlers = compose(
+        BiHandlers<HttpServerRequest, Object> handlers = compose(
                 new ExceptionHandler<>(),
                 new ResponseTimeHandler<>(),
                 new TimeOutHandler<>(vertx),
@@ -47,17 +46,18 @@ public class Example extends HttpTestBase {
                 .listen();
     }
 
-    public class EndHandler<T> implements
-            BiFunction<Consumer<Throwable>, Consumer<Object>,
-                BiConsumer<HttpServerRequest, T>> {
+    public class EndHandler<A> implements
+            BiFunction<BiConsumer<HttpServerRequest, Throwable>,
+            BiConsumer<HttpServerRequest, A>,
+            BiConsumer<HttpServerRequest, A>> {
 
         @Override
-        public BiConsumer<HttpServerRequest, T>
-            apply(Consumer<Throwable> fail, Consumer<Object> next) {
-                return (req, arg) -> {
-                    req.response().end("hello world!");
-                    next.accept(arg);
-                };
-            }
+        public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail,
+                                                      BiConsumer<HttpServerRequest, A> next) {
+            return (req, arg) -> {
+                req.response().end("hello world!");
+                next.accept(req, arg);
+            };
+        }
     }
 }

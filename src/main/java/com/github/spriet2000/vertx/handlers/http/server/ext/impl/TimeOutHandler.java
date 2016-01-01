@@ -5,9 +5,8 @@ import io.vertx.core.http.HttpServerRequest;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 
-public class TimeOutHandler<A> implements BiFunction<Consumer<Throwable>, Consumer<A>,
+public class TimeOutHandler<A> implements BiFunction<BiConsumer<HttpServerRequest, Throwable>, BiConsumer<HttpServerRequest, A>,
         BiConsumer<HttpServerRequest, A>> {
 
     private final Vertx vertx;
@@ -24,11 +23,11 @@ public class TimeOutHandler<A> implements BiFunction<Consumer<Throwable>, Consum
     }
 
     @Override
-    public BiConsumer<HttpServerRequest, A> apply(Consumer<Throwable> fail, Consumer<A> next) {
+    public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail, BiConsumer<HttpServerRequest, A> next) {
         return (req, arg) -> {
-            long id = vertx.setTimer(time, c -> fail.accept(new RuntimeException()));
+            long id = vertx.setTimer(time, c -> fail.accept(req, new RuntimeException()));
             req.response().bodyEndHandler(e -> vertx.cancelTimer(id));
-            next.accept(arg);
+            next.accept(req, arg);
         };
     }
 }

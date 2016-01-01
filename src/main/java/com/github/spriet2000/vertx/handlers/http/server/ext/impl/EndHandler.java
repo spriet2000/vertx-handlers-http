@@ -4,18 +4,17 @@ import io.vertx.core.http.HttpServerRequest;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 
-public class EndHandler<A> implements BiFunction<Consumer<Throwable>, Consumer<A>,
+public class EndHandler<A> implements BiFunction<BiConsumer<HttpServerRequest, Throwable>, BiConsumer<HttpServerRequest, A>,
         BiConsumer<HttpServerRequest, A>> {
 
     @Override
-    public BiConsumer<HttpServerRequest, A> apply(Consumer<Throwable> fail, Consumer<A> next) {
+    public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail, BiConsumer<HttpServerRequest, A> next) {
         return (req, arg) -> {
             if (req != null && !req.isEnded()) {
                 req.response().end();
             }
-            next.accept(arg);
+            next.accept(req, arg);
         };
     }
 }

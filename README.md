@@ -12,40 +12,21 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ```java 
     
-Handlers<HttpServerRequest, Object> handlers = compose(
-        new ExceptionHandler<>(),
-        new ResponseTimeHandler<>(),
-        new TimeOutHandler<>(vertx),
-        new EndHandler<>());
+    BiHandlers<HttpServerRequest, Object> handlers = compose(
+            new ExceptionHandler<>(),
+            new ResponseTimeHandler<>(),
+            new TimeOutHandler<>(vertx),
+            new EndHandler<>());
 
-BiConsumer<HttpServerRequest, Object> handler = handlers.apply(
-        (e, a) -> logger.error(a),
-        (e, a) -> logger.info(a));
+    BiConsumer<HttpServerRequest, Object> handler = handlers.apply(
+            (e, a) -> logger.error(a),
+            (e, a) -> logger.info(a));
 
-server.requestHandler(req -> handler.accept(req, null))
-        .listen();
-
-```
-
-### Example handler
-
-``` java
-
-public class EndHandler<A> implements 
-        BiFunction<Consumer<Throwable>, Consumer<Object>,
-            BiConsumer<HttpServerRequest, A>> {
-
-    @Override
-    public BiConsumer<HttpServerRequest, A> 
-        apply(Consumer<Throwable> fail, Consumer<A> next) {
-            return (req, arg) -> {
-                req.response().end("hello world!");
-                next.accept(arg);
-            };
-    }
-}    
+    server.requestHandler(req -> handler.accept(req, null))
+            .listen();
 
 ```
+
 ## Example project
 
 [https://github.com/spriet2000/vertx-handlers-http-example](https://github.com/spriet2000/vertx-handlers-http-example)
