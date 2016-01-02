@@ -14,6 +14,12 @@ public class StatikFileHandler<A> implements BiFunction<BiConsumer<HttpServerReq
     private final String appRoot;
     private final String defaultFile;
 
+
+    public StatikFileHandler(String appRoot) {
+        this.appRoot = appRoot;
+        this.defaultFile = "index.html";
+    }
+
     public StatikFileHandler(String appRoot, String defaultFile) {
         this.appRoot = appRoot;
         this.defaultFile = defaultFile;
