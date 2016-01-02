@@ -9,7 +9,6 @@
     <version>0.1.0-SNAPSHOT</version>
     <name>vertx-handlers-http</name>
 
-
     <properties>
         <tools.jar>${java.home}/../lib/tools.jar</tools.jar>
     </properties>
@@ -28,6 +27,18 @@
             <groupId>com.github.spriet2000</groupId>
             <artifactId>handlers</artifactId>
             <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>woodstox-core-asl</artifactId>
+            <version>4.4.1</version>
         </dependency>
 
         <!-- For examples scoped to test -->

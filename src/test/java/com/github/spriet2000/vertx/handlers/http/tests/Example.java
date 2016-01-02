@@ -3,7 +3,7 @@ package com.github.spriet2000.vertx.handlers.http.tests;
 import com.github.spriet2000.handlers.BiHandlers;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ExceptionHandler;
 import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ResponseTimeHandler;
-import com.github.spriet2000.vertx.handlers.http.server.ext.impl.TimeOutHandler;
+import com.github.spriet2000.vertx.handlers.http.server.ext.timeout.impl.TimeoutHandler;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerRequest;
@@ -35,7 +35,7 @@ public class Example extends HttpTestBase {
         BiHandlers<HttpServerRequest, Object> handlers = compose(
                 new ExceptionHandler<>(),
                 new ResponseTimeHandler<>(),
-                new TimeOutHandler<>(vertx),
+                new TimeoutHandler<>(vertx),
                 new EndHandler<>());
 
         BiConsumer<HttpServerRequest, Object> handler = handlers.apply(
@@ -48,8 +48,8 @@ public class Example extends HttpTestBase {
 
     public class EndHandler<A> implements
             BiFunction<BiConsumer<HttpServerRequest, Throwable>,
-            BiConsumer<HttpServerRequest, A>,
-            BiConsumer<HttpServerRequest, A>> {
+                    BiConsumer<HttpServerRequest, A>,
+                    BiConsumer<HttpServerRequest, A>> {
 
         @Override
         public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail,
