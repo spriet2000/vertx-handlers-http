@@ -32,7 +32,7 @@ public class Example extends HttpTestBase {
     @Test
     public void example1() {
 
-        BiHandlers<HttpServerRequest, Object> handlers = compose(
+        BiHandlers<HttpServerRequest, Void> handlers = compose(
                 new ExceptionHandler<>(),
                 new ResponseTimeHandler<>(),
                 new TimeoutHandler<>(vertx),
@@ -41,7 +41,7 @@ public class Example extends HttpTestBase {
                     n.accept(req, arg);
                 });
 
-        BiConsumer<HttpServerRequest, Object> handler = handlers.apply(
+        BiConsumer<HttpServerRequest, Void> handler = handlers.apply(
                 (e, a) -> logger.error(a),
                 (e, a) -> logger.info(a));
 
