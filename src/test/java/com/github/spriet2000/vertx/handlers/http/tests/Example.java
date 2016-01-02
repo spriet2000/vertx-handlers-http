@@ -36,7 +36,10 @@ public class Example extends HttpTestBase {
                 new ExceptionHandler<>(),
                 new ResponseTimeHandler<>(),
                 new TimeoutHandler<>(vertx),
-                new EndHandler<>());
+                (f, n) -> (req, arg) -> {
+                    req.response().end("hello world!");
+                    n.accept(req, arg);
+                });
 
         BiConsumer<HttpServerRequest, Object> handler = handlers.apply(
                 (e, a) -> logger.error(a),
@@ -44,20 +47,6 @@ public class Example extends HttpTestBase {
 
         server.requestHandler(req -> handler.accept(req, null))
                 .listen();
-    }
 
-    public class EndHandler<A> implements
-            BiFunction<BiConsumer<HttpServerRequest, Throwable>,
-                    BiConsumer<HttpServerRequest, A>,
-                    BiConsumer<HttpServerRequest, A>> {
-
-        @Override
-        public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail,
-                                                      BiConsumer<HttpServerRequest, A> next) {
-            return (req, arg) -> {
-                req.response().end("hello world!");
-                next.accept(req, arg);
-            };
-        }
     }
 }
