@@ -30,34 +30,3 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ```
 
-
-## Example project
-
-[https://github.com/spriet2000/vertx-handlers-http-example](https://github.com/spriet2000/vertx-handlers-http-example)
-
-## See also
-[https://github.com/spriet2000/handlers](https://github.com/spriet2000/handlers)
-
-## Installation
-
-### Maven
-
-```xml
-
-<dependency>
-    <groupId>com.github.spriet2000</groupId>
-    <artifactId>handlers</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
-</dependency>
-
-<dependency>
-    <groupId>com.github.spriet2000</groupId>
-    <artifactId>vertx-handlers-http</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
-</dependency>
-
-```
-
-### Without maven
-
-[https://oss.sonatype.org/content/repositories/snapshots/com/github/spriet2000](https://oss.sonatype.org/content/repositories/snapshots/com/github/spriet2000)
