@@ -31,7 +31,7 @@ public class Example extends HttpTestBase {
     @Test
     public void example1() {
 
-        ServerRequestHandlers<Void> chain = build(
+        ServerRequestHandlers<Void> handlers = build(
                 new ExceptionHandler<>(),
                 new ResponseTimeHandler<>(),
                 new TimeoutHandler<>(vertx),
@@ -40,7 +40,7 @@ public class Example extends HttpTestBase {
                     n.accept(req, arg);
                 });
 
-        BiConsumer<HttpServerRequest, Void> handler = chain.apply(
+        BiConsumer<HttpServerRequest, Void> handler = handlers.apply(
                 (e, a) -> logger.error(a),
                 (e, a) -> logger.info(a));
 
