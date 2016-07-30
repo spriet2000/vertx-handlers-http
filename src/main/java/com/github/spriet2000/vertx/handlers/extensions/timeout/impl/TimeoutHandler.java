@@ -1,6 +1,6 @@
-package com.github.spriet2000.vertx.handlers.http.server.ext.timeout.impl;
+package com.github.spriet2000.vertx.handlers.extensions.timeout.impl;
 
-import com.github.spriet2000.vertx.handlers.http.server.ext.timeout.TimeoutException;
+import com.github.spriet2000.vertx.handlers.extensions.timeout.TimeoutException;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
 

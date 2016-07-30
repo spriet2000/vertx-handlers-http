@@ -1,7 +1,7 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
 
-import com.github.spriet2000.handlers.BiHandlers;
+import com.github.spriet2000.vertx.handlers.core.http.ServerRequestHandlers;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerRequest;
@@ -13,8 +13,6 @@ import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.function.BiConsumer;
-
-import static com.github.spriet2000.handlers.BiHandlers.compose;
 
 public class BombTests extends HttpTestBase {
 
@@ -32,7 +30,7 @@ public class BombTests extends HttpTestBase {
         BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
         BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
 
-        BiHandlers<HttpServerRequest, Object> handlers = compose(
+        ServerRequestHandlers<Object> handlers = ServerRequestHandlers.build(
                 (f, n) -> (e, a) -> e.response().end());
 
 

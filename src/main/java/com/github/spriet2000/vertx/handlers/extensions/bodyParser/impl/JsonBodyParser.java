@@ -1,9 +1,8 @@
-package com.github.spriet2000.vertx.handlers.http.server.ext.bodyParser.impl;
+package com.github.spriet2000.vertx.handlers.extensions.bodyParser.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.github.spriet2000.vertx.handlers.http.server.ext.bodyParser.Body;
-import com.github.spriet2000.vertx.handlers.http.server.ext.bodyParser.BodyParseException;
+import com.github.spriet2000.vertx.handlers.extensions.bodyParser.Body;
+import com.github.spriet2000.vertx.handlers.extensions.bodyParser.BodyParseException;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
@@ -12,12 +11,12 @@ import io.vertx.core.http.HttpServerRequest;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-public class XmlBodyParser<A extends Body> implements BiFunction<BiConsumer<HttpServerRequest, Throwable>, BiConsumer<HttpServerRequest, A>,
+public class JsonBodyParser<A extends Body> implements BiFunction<BiConsumer<HttpServerRequest, Throwable>, BiConsumer<HttpServerRequest, A>,
         BiConsumer<HttpServerRequest, A>> {
 
     private final Class clazz;
 
-    public XmlBodyParser(Class clazz) {
+    public JsonBodyParser(Class clazz) {
         this.clazz = clazz;
     }
 
@@ -26,7 +25,7 @@ public class XmlBodyParser<A extends Body> implements BiFunction<BiConsumer<Http
                                                   BiConsumer<HttpServerRequest, A> next) {
         return (req, arg) -> {
             if (req.headers().contains(HttpHeaders.Names.CONTENT_TYPE)
-                    && !req.headers().get(HttpHeaders.Names.CONTENT_TYPE).equals("application/xml")) {
+                    && !req.headers().get(HttpHeaders.Names.CONTENT_TYPE).equals("application/json")) {
                 next.accept(req, arg);
                 return;
             }
@@ -37,7 +36,7 @@ public class XmlBodyParser<A extends Body> implements BiFunction<BiConsumer<Http
                 Buffer body = Buffer.buffer();
                 req.handler(body::appendBuffer);
                 req.endHandler(e -> {
-                    ObjectMapper mapper = new XmlMapper();
+                    ObjectMapper mapper = new ObjectMapper();
                     try {
                         arg.body(mapper.readValue(body.toString(), clazz));
                         next.accept(req, arg);

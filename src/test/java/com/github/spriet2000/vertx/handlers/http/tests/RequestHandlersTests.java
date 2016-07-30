@@ -1,6 +1,6 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
-import com.github.spriet2000.handlers.BiHandlers;
+import com.github.spriet2000.vertx.handlers.core.http.ServerRequestHandlers;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerRequest;
@@ -12,9 +12,11 @@ import org.junit.Test;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
+import static com.github.spriet2000.vertx.handlers.core.http.ServerRequestHandlers.build;
+
 public class RequestHandlersTests extends HttpTestBase {
 
-    Logger logger = LoggerFactory.getLogger(RequestHandlersTests.class);
+    private Logger logger = LoggerFactory.getLogger(RequestHandlersTests.class);
 
     @Test
     public void success() {
@@ -22,10 +24,10 @@ public class RequestHandlersTests extends HttpTestBase {
         AtomicBoolean hitException = new AtomicBoolean(false);
         AtomicBoolean hitComplete = new AtomicBoolean(false);
 
-        BiConsumer<StringBuilder, Throwable> exception = (e, a) -> hitException.set(true);
-        BiConsumer<StringBuilder, Void> success = (e, a) -> hitComplete.set(true);
+        BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> hitException.set(true);
+        BiConsumer<HttpServerRequest, Void> success = (e, a) -> hitComplete.set(true);
 
-        BiHandlers<StringBuilder, Void> handlers = new BiHandlers<>(
+        ServerRequestHandlers<Void> handlers = build(
                 (f, n) -> (e, a) -> n.accept(e, null),
                 (f, n) -> (e, a) -> n.accept(e, null),
                 (f, n) -> (e, a) -> n.accept(e, null),
@@ -43,15 +45,15 @@ public class RequestHandlersTests extends HttpTestBase {
         AtomicBoolean hitException = new AtomicBoolean(false);
         AtomicBoolean hitComplete = new AtomicBoolean(false);
 
-        BiConsumer<StringBuilder, Throwable> exception = (e, a) -> hitException.set(true);
-        BiConsumer<StringBuilder, Void> success = (e, a) -> hitComplete.set(true);
+        BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> hitException.set(true);
+        BiConsumer<HttpServerRequest, Void> success = (e, a) -> hitComplete.set(true);
 
-        BiHandlers<StringBuilder, Void> handlers = new BiHandlers<>();
+        ServerRequestHandlers<Void> handlers = new ServerRequestHandlers<>();
 
-        handlers.andThen((f, n) -> n::accept,
-                (f, n) -> n::accept,
+        handlers.andThen((f, n) -> n,
+                (f, n) -> n,
                 (f, n) -> (e, a) -> f.accept(e, new RuntimeException()),
-                (f, n) -> n::accept);
+                (f, n) -> n);
 
         handlers.apply(exception, success).accept(null, null);
 
@@ -65,7 +67,7 @@ public class RequestHandlersTests extends HttpTestBase {
         BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
         BiConsumer<HttpServerRequest, Void> success = (e, a) -> logger.info(a);
 
-        BiHandlers<HttpServerRequest, Void> handlers = new BiHandlers<>();
+        ServerRequestHandlers<Void> handlers = new ServerRequestHandlers<>();
         handlers.andThen((f, n) -> (e, a) -> n.accept(e, null),
                 (f, n) -> (e, a) -> e.response().end());
 

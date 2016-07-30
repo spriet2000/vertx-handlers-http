@@ -12,7 +12,7 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ```java 
     
-    BiHandlers<HttpServerRequest, Void> handlers = compose(
+    ServerRequestHandlers<Void> chain = build(
             new ExceptionHandler<>(),
             new ResponseTimeHandler<>(),
             new TimeoutHandler<>(vertx),
@@ -21,7 +21,7 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
                 n.accept(req, arg);
             });
 
-    BiConsumer<HttpServerRequest, Void> handler = handlers.apply(
+    BiConsumer<HttpServerRequest, Void> handler = chain.apply(
             (e, a) -> logger.error(a),
             (e, a) -> logger.info(a));
 

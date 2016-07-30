@@ -1,9 +1,9 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
-import com.github.spriet2000.handlers.BiHandlers;
-import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ExceptionHandler;
-import com.github.spriet2000.vertx.handlers.http.server.ext.impl.ResponseTimeHandler;
-import com.github.spriet2000.vertx.handlers.http.server.ext.timeout.impl.TimeoutHandler;
+import com.github.spriet2000.vertx.handlers.core.http.ServerRequestHandlers;
+import com.github.spriet2000.vertx.handlers.extensions.basic.impl.ExceptionHandler;
+import com.github.spriet2000.vertx.handlers.extensions.basic.impl.ResponseTimeHandler;
+import com.github.spriet2000.vertx.handlers.extensions.timeout.impl.TimeoutHandler;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerRequest;
@@ -14,14 +14,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 
-import static com.github.spriet2000.handlers.BiHandlers.compose;
+import static com.github.spriet2000.vertx.handlers.core.http.ServerRequestHandlers.build;
 
 
 public class Example extends HttpTestBase {
 
-    Logger logger = LoggerFactory.getLogger(Example.class);
+    private Logger logger = LoggerFactory.getLogger(Example.class);
 
     @Before
     public void setup() {
@@ -32,7 +31,7 @@ public class Example extends HttpTestBase {
     @Test
     public void example1() {
 
-        BiHandlers<HttpServerRequest, Void> handlers = compose(
+        ServerRequestHandlers<Void> chain = build(
                 new ExceptionHandler<>(),
                 new ResponseTimeHandler<>(),
                 new TimeoutHandler<>(vertx),
@@ -41,7 +40,7 @@ public class Example extends HttpTestBase {
                     n.accept(req, arg);
                 });
 
-        BiConsumer<HttpServerRequest, Void> handler = handlers.apply(
+        BiConsumer<HttpServerRequest, Void> handler = chain.apply(
                 (e, a) -> logger.error(a),
                 (e, a) -> logger.info(a));
 
