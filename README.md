@@ -12,21 +12,21 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ```java 
     
-    ServerRequestHandlers<Void> handlers = build(
-            new ExceptionHandler<>(),
-            new ResponseTimeHandler<>(),
-            new TimeoutHandler<>(vertx),
-            (f, n) -> (req, arg) -> {
-                req.response().end("hello world!");
-                n.accept(req, arg);
-            });
+ServerRequestHandlers<Void> handlers = build(
+        new ExceptionHandler<>(),
+        new ResponseTimeHandler<>(),
+        new TimeoutHandler<>(vertx),
+        (f, n) -> (req, arg) -> {
+            req.response().end("hello world!");
+            n.accept(req, arg);
+        });
 
-    BiConsumer<HttpServerRequest, Void> handler = handlers.apply(
-            (e, a) -> logger.error(a),
-            (e, a) -> logger.info(a));
+BiConsumer<HttpServerRequest, Void> handler = handlers.apply(
+        (e, a) -> logger.error(a),
+        (e, a) -> logger.info(a));
 
-    server.requestHandler(req -> handler.accept(req, null))
-            .listen();
+server.requestHandler(req -> handler.accept(req, null))
+        .listen();
 
 ```
 
@@ -34,15 +34,16 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ```java 
 
-    public class HandlerImpl implements BiFunction<BiConsumer<HttpServerRequest, Throwable>,
-            BiConsumer<HttpServerRequest, Void>, BiConsumer<HttpServerRequest, Void>> {
+public class HandlerImpl implements BiFunction<BiConsumer<HttpServerRequest, Throwable>,
+        BiConsumer<HttpServerRequest, Void>, 
+        BiConsumer<HttpServerRequest, Void>> {
 
-        @Override
-        public BiConsumer<HttpServerRequest, Void> apply(BiConsumer<HttpServerRequest, Throwable> fail,
-                                                     BiConsumer<HttpServerRequest, Void> next) {
-            return next;
-        }
+    @Override
+    public BiConsumer<HttpServerRequest, Void> apply(BiConsumer<HttpServerRequest, Throwable> fail,
+                                                 BiConsumer<HttpServerRequest, Void> next) {
+        return next;
     }
+}
 
 ```
 
