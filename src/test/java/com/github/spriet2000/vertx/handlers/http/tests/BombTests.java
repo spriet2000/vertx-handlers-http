@@ -30,7 +30,7 @@ public class BombTests extends HttpTestBase {
         BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> logger.error(a);
         BiConsumer<HttpServerRequest, Object> success = (e, a) -> logger.info(a);
 
-        ServerRequestHandlers<Object> handlers = ServerRequestHandlers.build(
+        ServerRequestHandlers<Object> handlers = ServerRequestHandlers.use(
                 (f, n) -> (e, a) -> e.response().end());
 
 

@@ -59,12 +59,12 @@ public class ServerRequestHandlers<A> implements BiHandlers<HttpServerRequest, A
     }
 
     @SafeVarargs
-    public static <A> ServerRequestHandlers<A> build(ServerRequestHandlers<A>... handlers) {
+    public static <A> ServerRequestHandlers<A> use(ServerRequestHandlers<A>... handlers) {
         return new ServerRequestHandlers<>(handlers);
     }
 
     @SafeVarargs
-    public static <A> ServerRequestHandlers<A> build(BiFunction<BiConsumer<HttpServerRequest, Throwable>,
+    public static <A> ServerRequestHandlers<A> use(BiFunction<BiConsumer<HttpServerRequest, Throwable>,
             BiConsumer<HttpServerRequest, A>, BiConsumer<HttpServerRequest, A>>... handlers) {
         return new ServerRequestHandlers<>(handlers);
     }

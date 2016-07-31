@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import java.util.function.BiConsumer;
 
-import static com.github.spriet2000.vertx.handlers.http.impl.ServerRequestHandlers.build;
+import static com.github.spriet2000.vertx.handlers.http.impl.ServerRequestHandlers.use;
 
 
 public class Example extends HttpTestBase {
@@ -31,7 +31,7 @@ public class Example extends HttpTestBase {
     @Test
     public void example1() {
 
-        ServerRequestHandlers<Void> handlers = build(
+        ServerRequestHandlers<Void> handlers = use(
                 new ExceptionHandler<>(),
                 new ResponseTimeHandler<>(),
                 new TimeoutHandler<>(vertx),

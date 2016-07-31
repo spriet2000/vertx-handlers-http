@@ -10,7 +10,8 @@ import org.junit.Test;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
-import static com.github.spriet2000.vertx.handlers.http.impl.ServerRequestHandlers.build;
+import static com.github.spriet2000.vertx.handlers.http.impl.ServerRequestHandlers.use;
+
 
 @SuppressWarnings("ALL")
 public class RequestHandlersTests extends HttpTestBase {
@@ -26,7 +27,7 @@ public class RequestHandlersTests extends HttpTestBase {
         BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> hitException.set(true);
         BiConsumer<HttpServerRequest, Void> success = (e, a) -> hitComplete.set(true);
 
-        ServerRequestHandlers<Void> handlers = build(
+        ServerRequestHandlers<Void> handlers = use(
             (f, n) -> n,
             (f, n) -> n,
             (f, n) -> n,
@@ -47,7 +48,7 @@ public class RequestHandlersTests extends HttpTestBase {
         BiConsumer<HttpServerRequest, Throwable> exception = (e, a) -> hitException.set(true);
         BiConsumer<HttpServerRequest, Void> success = (e, a) -> hitComplete.set(true);
 
-        ServerRequestHandlers<Void> handlers = build(
+        ServerRequestHandlers<Void> handlers = use(
             (f, n) -> n,
             (f, n) -> n,
             (f, n) -> (e, a) -> f.accept(e, new RuntimeException()),
