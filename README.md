@@ -35,8 +35,7 @@ server.requestHandler(req -> handler.accept(req, null))
 ```java 
 
 public class HandlerImpl implements BiFunction<BiConsumer<HttpServerRequest, Throwable>,
-        BiConsumer<HttpServerRequest, Void>, 
-        BiConsumer<HttpServerRequest, Void>> {
+        BiConsumer<HttpServerRequest, Void>, BiConsumer<HttpServerRequest, Void>> {
 
     @Override
     public BiConsumer<HttpServerRequest, Void> apply(BiConsumer<HttpServerRequest, Throwable> fail,
