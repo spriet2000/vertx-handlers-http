@@ -12,7 +12,7 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ```java 
     
-ServerRequestHandlers<Void> handlers = build(
+ServerRequestHandlers<Void> handlers = use(
         new ExceptionHandler<>(),
         new ResponseTimeHandler<>(),
         new TimeoutHandler<>(vertx),
