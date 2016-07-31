@@ -46,6 +46,9 @@ public class HandlerImpl implements BiFunction<BiConsumer<HttpServerRequest, Thr
 
 ```
 
+## Example 
+
+https://github.com/spriet2000/vertx-handlers-http-example
 
 ### Remarks
 
