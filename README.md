@@ -34,7 +34,7 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ```java 
 
-    public class HttpServerRequestHandlerImpl implements BiFunction<BiConsumer<HttpServerRequest, Throwable>,
+    public class HandlerImpl implements BiFunction<BiConsumer<HttpServerRequest, Throwable>,
             BiConsumer<HttpServerRequest, Void>, BiConsumer<HttpServerRequest, Void>> {
 
         @Override
