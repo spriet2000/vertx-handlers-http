@@ -34,12 +34,12 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ```java 
 
-    public class ExampleHandler implements BiFunction<BiConsumer<StringBuilder, Throwable>,
-            BiConsumer<StringBuilder, Void>, BiConsumer<StringBuilder, Void>> {
+    public class HttpServerRequestHandlerImpl implements BiFunction<BiConsumer<HttpServerRequest, Throwable>,
+            BiConsumer<HttpServerRequest, Void>, BiConsumer<HttpServerRequest, Void>> {
 
         @Override
-        public BiConsumer<StringBuilder, Void> apply(BiConsumer<StringBuilder, Throwable> fail,
-                                                     BiConsumer<StringBuilder, Void> next) {
+        public BiConsumer<HttpServerRequest, Void> apply(BiConsumer<HttpServerRequest, Throwable> fail,
+                                                     BiConsumer<HttpServerRequest, Void> next) {
             return next;
         }
     }
