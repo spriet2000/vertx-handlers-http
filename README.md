@@ -54,3 +54,15 @@ https://github.com/spriet2000/vertx-handlers-http-example
 
 * When var, or something like, enters the JAVA language, defining handlers is quite less verbose. http://openjdk.java.net/jeps/286
 * Implementing handler still is quite verbose. 
+
+## Installation
+
+```xml 
+
+<dependency>
+    <groupId>com.github.spriet2000</groupId>
+    <artifactId>vertx-handlers-http</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
+
+```
