@@ -1,6 +1,6 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
-import com.github.spriet2000.vertx.handlers.core.http.ServerRequestHandlers;
+import com.github.spriet2000.vertx.handlers.http.impl.ServerRequestHandlers;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerRequest;
@@ -12,8 +12,9 @@ import org.junit.Test;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
-import static com.github.spriet2000.vertx.handlers.core.http.ServerRequestHandlers.build;
+import static com.github.spriet2000.vertx.handlers.http.impl.ServerRequestHandlers.build;
 
+@SuppressWarnings("ALL")
 public class RequestHandlersTests extends HttpTestBase {
 
     private Logger logger = LoggerFactory.getLogger(RequestHandlersTests.class);

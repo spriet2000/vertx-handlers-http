@@ -8,7 +8,7 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 [![Build Status](https://travis-ci.org/spriet2000/vertx-handlers-http.svg?branch=master)](https://travis-ci.org/spriet2000/vertx-handlers-http)
 
-## Example
+## Setup server request handlers
 
 ```java 
     
@@ -30,3 +30,24 @@ Inspired by ['Build You Own Web Framework In Go'](https://www.nicolasmerouze.com
 
 ```
 
+## Implement server request handlers
+
+```java 
+
+    public class ExampleHandler implements BiFunction<BiConsumer<StringBuilder, Throwable>,
+            BiConsumer<StringBuilder, Void>, BiConsumer<StringBuilder, Void>> {
+
+        @Override
+        public BiConsumer<StringBuilder, Void> apply(BiConsumer<StringBuilder, Throwable> fail,
+                                                     BiConsumer<StringBuilder, Void> next) {
+            return next;
+        }
+    }
+
+```
+
+
+### Remarks
+
+* When var, or something like, enters the JAVA language, defining handlers is quite less verbose. http://openjdk.java.net/jeps/286
+* Implementing handler still is quite verbose. 

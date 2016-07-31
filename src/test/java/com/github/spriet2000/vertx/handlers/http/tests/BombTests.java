@@ -1,7 +1,7 @@
 package com.github.spriet2000.vertx.handlers.http.tests;
 
 
-import com.github.spriet2000.vertx.handlers.core.http.ServerRequestHandlers;
+import com.github.spriet2000.vertx.handlers.http.impl.ServerRequestHandlers;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerRequest;

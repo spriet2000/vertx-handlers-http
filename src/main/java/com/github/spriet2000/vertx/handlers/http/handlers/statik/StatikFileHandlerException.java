@@ -1,4 +1,4 @@
-package com.github.spriet2000.vertx.handlers.extensions.statik;
+package com.github.spriet2000.vertx.handlers.http.handlers.statik;
 
 
 public final class StatikFileHandlerException extends Exception {

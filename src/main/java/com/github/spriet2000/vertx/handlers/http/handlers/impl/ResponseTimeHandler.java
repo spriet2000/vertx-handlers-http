@@ -1,4 +1,4 @@
-package com.github.spriet2000.vertx.handlers.extensions.basic.impl;
+package com.github.spriet2000.vertx.handlers.http.handlers.impl;
 
 import io.vertx.core.http.HttpServerRequest;
 

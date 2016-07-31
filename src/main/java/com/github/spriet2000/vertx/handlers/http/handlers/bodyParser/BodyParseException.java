@@ -1,4 +1,4 @@
-package com.github.spriet2000.vertx.handlers.extensions.bodyParser;
+package com.github.spriet2000.vertx.handlers.http.handlers.bodyParser;
 
 
 public final class BodyParseException extends Exception {

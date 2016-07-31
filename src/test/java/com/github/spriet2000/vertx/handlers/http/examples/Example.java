@@ -1,9 +1,9 @@
-package com.github.spriet2000.vertx.handlers.http.tests;
+package com.github.spriet2000.vertx.handlers.http.examples;
 
-import com.github.spriet2000.vertx.handlers.core.http.ServerRequestHandlers;
-import com.github.spriet2000.vertx.handlers.extensions.basic.impl.ExceptionHandler;
-import com.github.spriet2000.vertx.handlers.extensions.basic.impl.ResponseTimeHandler;
-import com.github.spriet2000.vertx.handlers.extensions.timeout.impl.TimeoutHandler;
+import com.github.spriet2000.vertx.handlers.http.handlers.impl.ExceptionHandler;
+import com.github.spriet2000.vertx.handlers.http.handlers.impl.ResponseTimeHandler;
+import com.github.spriet2000.vertx.handlers.http.handlers.timeout.impl.TimeoutHandler;
+import com.github.spriet2000.vertx.handlers.http.impl.ServerRequestHandlers;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerRequest;
@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import java.util.function.BiConsumer;
 
-import static com.github.spriet2000.vertx.handlers.core.http.ServerRequestHandlers.build;
+import static com.github.spriet2000.vertx.handlers.http.impl.ServerRequestHandlers.build;
 
 
 public class Example extends HttpTestBase {

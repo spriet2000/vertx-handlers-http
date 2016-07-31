@@ -1,6 +1,6 @@
-package com.github.spriet2000.vertx.handlers.extensions.statik.impl;
+package com.github.spriet2000.vertx.handlers.http.handlers.statik.impl;
 
-import com.github.spriet2000.vertx.handlers.extensions.statik.StatikFileHandlerException;
+import com.github.spriet2000.vertx.handlers.http.handlers.statik.StatikFileHandlerException;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerRequest;
 
