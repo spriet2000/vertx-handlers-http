@@ -46,14 +46,15 @@ public class HandlerImpl implements BiFunction<BiConsumer<HttpServerRequest, Thr
 
 ```
 
-## Example 
-
-https://github.com/spriet2000/vertx-handlers-http-example
-
 ### Remarks
 
 * When var, or something like, enters the JAVA language, defining handlers is quite less verbose. http://openjdk.java.net/jeps/286
 * Implementing handler still is quite verbose. 
+
+## Example 
+
+https://github.com/spriet2000/vertx-handlers-http-example
+
 
 ## Installation
 
@@ -66,3 +67,4 @@ https://github.com/spriet2000/vertx-handlers-http-example
 </dependency>
 
 ```
+
