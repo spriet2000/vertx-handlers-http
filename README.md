@@ -38,9 +38,9 @@ public class HandlerImpl implements BiFunction<BiConsumer<HttpServerRequest, Thr
         BiConsumer<HttpServerRequest, Void>, BiConsumer<HttpServerRequest, Void>> {
 
     @Override
-    public BiConsumer<HttpServerRequest, Void> apply(BiConsumer<HttpServerRequest, Throwable> fail,
-                                                 BiConsumer<HttpServerRequest, Void> next) {
-        return next;
+    public BiConsumer<HttpServerRequest, Void> apply(
+        BiConsumer<HttpServerRequest, Throwable> fail, BiConsumer<HttpServerRequest, Void> next) {
+            return next;
     }
 }
 
