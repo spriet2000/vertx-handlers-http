@@ -20,14 +20,42 @@ public class ServerRequestHandlers<A> implements BiHandlers<HttpServerRequest, A
     @SafeVarargs
     public ServerRequestHandlers(BiFunction<BiConsumer<HttpServerRequest, Throwable>, BiConsumer<HttpServerRequest, A>,
             BiConsumer<HttpServerRequest, A>>... handlers) {
-        Collections.addAll(biHandlers.handlers(), handlers);
+        Collections.addAll(biHandlers.list(), handlers);
     }
 
     @SafeVarargs
     public ServerRequestHandlers(ServerRequestHandlers<A>... handlers) {
         for (ServerRequestHandlers<A> handler : handlers) {
-            biHandlers.handlers().addAll(handler.handlers().stream().collect(Collectors.toList()));
+            biHandlers.list().addAll(handler.list().stream().collect(Collectors.toList()));
         }
+    }
+
+    @Override
+    public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> exceptionHandler,
+                                                  BiConsumer<HttpServerRequest, A> successHandler) {
+        return biHandlers.apply(exceptionHandler, successHandler);
+    }
+
+    @Override
+    public BiHandlersImpl<HttpServerRequest, A> andThen(BiConsumer<HttpServerRequest, A>... biConsumers) {
+        return biHandlers.andThen(biConsumers);
+    }
+
+    @Override
+    public BiHandlersImpl<HttpServerRequest, A> andThen(BiFunction<BiConsumer<HttpServerRequest, Throwable>,
+            BiConsumer<HttpServerRequest, A>, BiConsumer<HttpServerRequest, A>>... list) {
+        return biHandlers.andThen(list);
+    }
+
+    @Override
+    public BiHandlersImpl<HttpServerRequest, A> andThen(BiHandlersImpl<HttpServerRequest, A>... biHandlers) {
+        return this.biHandlers.andThen(biHandlers);
+    }
+
+    @Override
+    public List<BiFunction<BiConsumer<HttpServerRequest, Throwable>, BiConsumer<HttpServerRequest, A>,
+            BiConsumer<HttpServerRequest, A>>> list() {
+        return biHandlers.list();
     }
 
     @SafeVarargs
@@ -41,28 +69,4 @@ public class ServerRequestHandlers<A> implements BiHandlers<HttpServerRequest, A
         return new ServerRequestHandlers<>(handlers);
     }
 
-    @Override
-    public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> exceptionHandler, BiConsumer<HttpServerRequest, A> successHandler) {
-        return biHandlers.apply(exceptionHandler, successHandler);
-    }
-
-    @Override
-    public BiHandlersImpl<HttpServerRequest, A> andThen(BiConsumer<HttpServerRequest, A>... consumers) {
-        return biHandlers.andThen(consumers);
-    }
-
-    @Override
-    public BiHandlersImpl<HttpServerRequest, A> andThen(BiFunction<BiConsumer<HttpServerRequest, Throwable>, BiConsumer<HttpServerRequest, A>, BiConsumer<HttpServerRequest, A>>... handlers) {
-        return null;
-    }
-
-    @Override
-    public BiHandlersImpl<HttpServerRequest, A> andThen(BiHandlersImpl<HttpServerRequest, A>... handlers) {
-        return biHandlers.andThen(handlers);
-    }
-
-    @Override
-    public List<BiFunction<BiConsumer<HttpServerRequest, Throwable>, BiConsumer<HttpServerRequest, A>, BiConsumer<HttpServerRequest, A>>> handlers() {
-        return biHandlers.handlers();
-    }
 }
