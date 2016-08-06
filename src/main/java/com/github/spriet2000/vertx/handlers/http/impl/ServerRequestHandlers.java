@@ -20,13 +20,13 @@ public class ServerRequestHandlers<A> implements BiHandlers<HttpServerRequest, A
     @SafeVarargs
     public ServerRequestHandlers(BiFunction<BiConsumer<HttpServerRequest, Throwable>, BiConsumer<HttpServerRequest, A>,
             BiConsumer<HttpServerRequest, A>>... handlers) {
-        Collections.addAll(biHandlers.list(), handlers);
+        Collections.addAll(biHandlers.getList(), handlers);
     }
 
     @SafeVarargs
     public ServerRequestHandlers(ServerRequestHandlers<A>... handlers) {
         for (ServerRequestHandlers<A> handler : handlers) {
-            biHandlers.list().addAll(handler.list().stream().collect(Collectors.toList()));
+            biHandlers.getList().addAll(handler.getList().stream().collect(Collectors.toList()));
         }
     }
 
@@ -36,26 +36,29 @@ public class ServerRequestHandlers<A> implements BiHandlers<HttpServerRequest, A
         return biHandlers.apply(exceptionHandler, successHandler);
     }
 
+    @SafeVarargs
     @Override
-    public BiHandlersImpl<HttpServerRequest, A> andThen(BiConsumer<HttpServerRequest, A>... biConsumers) {
+    public final BiHandlersImpl<HttpServerRequest, A> andThen(BiConsumer<HttpServerRequest, A>... biConsumers) {
         return biHandlers.andThen(biConsumers);
     }
 
+    @SafeVarargs
     @Override
-    public BiHandlersImpl<HttpServerRequest, A> andThen(BiFunction<BiConsumer<HttpServerRequest, Throwable>,
+    public final BiHandlersImpl<HttpServerRequest, A> andThen(BiFunction<BiConsumer<HttpServerRequest, Throwable>,
             BiConsumer<HttpServerRequest, A>, BiConsumer<HttpServerRequest, A>>... list) {
         return biHandlers.andThen(list);
     }
 
+    @SafeVarargs
     @Override
-    public BiHandlersImpl<HttpServerRequest, A> andThen(BiHandlersImpl<HttpServerRequest, A>... biHandlers) {
+    public final BiHandlersImpl<HttpServerRequest, A> andThen(BiHandlersImpl<HttpServerRequest, A>... biHandlers) {
         return this.biHandlers.andThen(biHandlers);
     }
 
     @Override
     public List<BiFunction<BiConsumer<HttpServerRequest, Throwable>, BiConsumer<HttpServerRequest, A>,
-            BiConsumer<HttpServerRequest, A>>> list() {
-        return biHandlers.list();
+            BiConsumer<HttpServerRequest, A>>> getList() {
+        return biHandlers.getList();
     }
 
     @SafeVarargs

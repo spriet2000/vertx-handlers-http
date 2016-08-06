@@ -17,5 +17,5 @@ public interface BiHandlers<E, A> {
 
     BiHandlersImpl<E, A> andThen(BiHandlersImpl<E, A>... handlers);
 
-    List<BiFunction<BiConsumer<E, Throwable>, BiConsumer<E, A>, BiConsumer<E, A>>> list();
+    List<BiFunction<BiConsumer<E, Throwable>, BiConsumer<E, A>, BiConsumer<E, A>>> getList();
 }

@@ -19,9 +19,9 @@ public final class BiHandlersImpl<E, A> implements BiHandlers<E, A> {
     @Override
     public BiConsumer<E, A> apply(BiConsumer<E, Throwable> exceptionHandler, BiConsumer<E, A> successHandler) {
         BiConsumer<E, A> last = successHandler;
-        for (int i = list().size() - 1; i >= 0; i--) {
+        for (int i = getList().size() - 1; i >= 0; i--) {
             final BiConsumer<E, A> previous = last;
-            last = list().get(i).apply(
+            last = getList().get(i).apply(
                     exceptionHandler,
                     previous);
         }
@@ -32,7 +32,7 @@ public final class BiHandlersImpl<E, A> implements BiHandlers<E, A> {
     @SafeVarargs
     public final BiHandlersImpl<E, A> andThen(BiConsumer<E, A>... consumers) {
         for (BiConsumer<E, A> consumer : consumers) {
-            list().add((f, n) -> consumer);
+            getList().add((f, n) -> consumer);
         }
         return this;
     }
@@ -40,7 +40,7 @@ public final class BiHandlersImpl<E, A> implements BiHandlers<E, A> {
     @Override
     @SafeVarargs
     public final BiHandlersImpl<E, A> andThen(BiFunction<BiConsumer<E, Throwable>, BiConsumer<E, A>, BiConsumer<E, A>>... handlers) {
-        Collections.addAll(list(), handlers);
+        Collections.addAll(getList(), handlers);
         return this;
     }
 
@@ -48,13 +48,13 @@ public final class BiHandlersImpl<E, A> implements BiHandlers<E, A> {
     @SafeVarargs
     public final BiHandlersImpl<E, A> andThen(BiHandlersImpl<E, A>... handlers) {
         for (BiHandlersImpl<E, A> handler : handlers) {
-            list().addAll(handler.list().stream().collect(Collectors.toList()));
+            getList().addAll(handler.getList().stream().collect(Collectors.toList()));
         }
         return this;
     }
 
     @Override
-    public List<BiFunction<BiConsumer<E, Throwable>, BiConsumer<E, A>, BiConsumer<E, A>>> list() {
+    public List<BiFunction<BiConsumer<E, Throwable>, BiConsumer<E, A>, BiConsumer<E, A>>> getList() {
         return list;
     }
 }

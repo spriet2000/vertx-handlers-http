@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
 public class LogHandler<A> implements BiFunction<BiConsumer<HttpServerRequest, Throwable>, BiConsumer<HttpServerRequest, A>,
         BiConsumer<HttpServerRequest, A>> {
 
-    Logger logger = LoggerFactory.getLogger(LogHandler.class);
+    private Logger logger = LoggerFactory.getLogger(LogHandler.class);
 
     @Override
     public BiConsumer<HttpServerRequest, A> apply(BiConsumer<HttpServerRequest, Throwable> fail,
@@ -23,9 +23,11 @@ public class LogHandler<A> implements BiFunction<BiConsumer<HttpServerRequest, T
             logger.info(builder1.toString());
             req.endHandler(x -> {
                 StringBuilder builder2 = new StringBuilder();
-                builder2.append(String.format("Response %s \n", req.response().getStatusCode()));
+                builder2.append("Response \n");
+                builder2.append(String.format("Status %s \n", req.response().getStatusCode()));
+                builder2.append("Headers \n");
                 req.response().headers().entries().forEach(e ->
-                        builder2.append(String.format("- hdr %s : %s \n", e.getKey(), e.getValue())));
+                        builder2.append(String.format("- %s : %s \n", e.getKey(), e.getValue())));
                 logger.info(builder2.toString());
             });
             next.accept(req, arg);
