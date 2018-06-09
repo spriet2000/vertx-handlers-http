@@ -4,11 +4,11 @@ import com.github.spriet2000.vertx.handlers.core.BiHandlers;
 import com.github.spriet2000.vertx.handlers.core.impl.BiHandlersImpl;
 import io.vertx.core.http.HttpServerRequest;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 public class ServerRequestHandlers<A> implements BiHandlers<HttpServerRequest, A> {
 
@@ -26,7 +26,7 @@ public class ServerRequestHandlers<A> implements BiHandlers<HttpServerRequest, A
     @SafeVarargs
     public ServerRequestHandlers(ServerRequestHandlers<A>... handlers) {
         for (ServerRequestHandlers<A> handler : handlers) {
-            biHandlers.getList().addAll(handler.getList().stream().collect(Collectors.toList()));
+            biHandlers.getList().addAll(new ArrayList<>(handler.getList()));
         }
     }
 

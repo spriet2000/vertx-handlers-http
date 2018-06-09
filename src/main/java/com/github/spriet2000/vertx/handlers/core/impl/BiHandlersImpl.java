@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 public final class BiHandlersImpl<E, A> implements BiHandlers<E, A> {
 
@@ -48,7 +47,7 @@ public final class BiHandlersImpl<E, A> implements BiHandlers<E, A> {
     @SafeVarargs
     public final BiHandlersImpl<E, A> andThen(BiHandlersImpl<E, A>... handlers) {
         for (BiHandlersImpl<E, A> handler : handlers) {
-            getList().addAll(handler.getList().stream().collect(Collectors.toList()));
+            getList().addAll(new ArrayList<>(handler.getList()));
         }
         return this;
     }

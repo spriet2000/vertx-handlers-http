@@ -21,7 +21,7 @@ ServerRequestHandlers<Void> handlers = use(
             n.accept(req, arg);
         });
 
-BiConsumer<HttpServerRequest, Void> handler = handlers.apply(
+var handler = handlers.apply(
         (e, a) -> logger.error(a),
         (e, a) -> logger.info(a));
 
