@@ -48,7 +48,6 @@ public class HandlerImpl implements BiFunction<BiConsumer<HttpServerRequest, Thr
 
 ### Remarks
 
-* When var, or something like, enters the JAVA language, defining handlers is quite less verbose. http://openjdk.java.net/jeps/286
 * Implementing handler still is quite verbose. 
 
 ## Example 
